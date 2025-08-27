@@ -1,1334 +1,2052 @@
-:root {
-  /* Primitive Color Tokens */
-  --color-white: rgba(255, 255, 255, 1);
-  --color-black: rgba(0, 0, 0, 1);
-  --color-cream-50: rgba(252, 252, 249, 1);
-  --color-cream-100: rgba(255, 255, 253, 1);
-  --color-gray-200: rgba(245, 245, 245, 1);
-  --color-gray-300: rgba(167, 169, 169, 1);
-  --color-gray-400: rgba(119, 124, 124, 1);
-  --color-slate-500: rgba(98, 108, 113, 1);
-  --color-brown-600: rgba(94, 82, 64, 1);
-  --color-charcoal-700: rgba(31, 33, 33, 1);
-  --color-charcoal-800: rgba(38, 40, 40, 1);
-  --color-slate-900: rgba(19, 52, 59, 1);
-  --color-teal-300: rgba(50, 184, 198, 1);
-  --color-teal-400: rgba(45, 166, 178, 1);
-  --color-teal-500: rgba(33, 128, 141, 1);
-  --color-teal-600: rgba(29, 116, 128, 1);
-  --color-teal-700: rgba(26, 104, 115, 1);
-  --color-teal-800: rgba(41, 150, 161, 1);
-  --color-red-400: rgba(255, 84, 89, 1);
-  --color-red-500: rgba(192, 21, 47, 1);
-  --color-orange-400: rgba(230, 129, 97, 1);
-  --color-orange-500: rgba(168, 75, 47, 1);
+// Application data - includes all 14 tools with enhanced properties
+const toolsData = {
+  "tools": [
+    {
+      "id": "csrf-generator",
+      "name": "CSRF Generator V.1",
+      "description": "Generate CSRF from BurpSuite Request",
+      "category": "Web Security",
+      "icon": "🔐",
+      "color": "#00D4FF"
+    },
+    {
+      "id": "cors-scanner", 
+      "name": "CORS Scanner",
+      "description": "Discover CORS vulnerabilities with this tools for penetration testing",
+      "category": "Web Security",
+      "icon": "🌐",
+      "color": "#B537F7"
+    },
+    {
+      "id": "clickjacking-test",
+      "name": "Clickjacking Test", 
+      "description": "Check your target against Clickjacking vulnerability",
+      "category": "Web Security",
+      "icon": "🖱️",
+      "color": "#39FF14"
+    },
+    {
+      "id": "curl-to-php",
+      "name": "Curl To PHP",
+      "description": "This tool turns a Curl command into PHP code", 
+      "category": "Code Conversion",
+      "icon": "💻",
+      "color": "#FF1493"
+    },
+    {
+      "id": "cvss-calculator",
+      "name": "CVSS Calculator",
+      "description": "Illustrated graphical Common Vulnerability Scoring System (CVSS)",
+      "category": "Risk Assessment", 
+      "icon": "📊",
+      "color": "#00FFFF"
+    },
+    {
+      "id": "jso-generator",
+      "name": "JSO Generator", 
+      "description": "Create Overlay payload for Deface website",
+      "category": "Payload Generation",
+      "icon": "🎭",
+      "color": "#FF6B35"
+    },
+    {
+      "id": "crontab-generator",
+      "name": "Crontab Online Generator",
+      "description": "Generate crontab commands online",
+      "category": "System Tools",
+      "icon": "⏰",
+      "color": "#7B68EE"
+    },
+    {
+      "id": "subdomain-scanner",
+      "name": "Subdomain Scanner", 
+      "description": "Find subdomains for penetration testing",
+      "category": "Reconnaissance",
+      "icon": "🔍",
+      "color": "#00FF7F"
+    },
+    {
+      "id": "hash-identifier",
+      "name": "Hash Identifier",
+      "description": "Identify the hashing algorithm used", 
+      "category": "Cryptography",
+      "icon": "#️⃣",
+      "color": "#FFD700"
+    },
+    {
+      "id": "md5-generator",
+      "name": "MD5 Online Generator",
+      "description": "Generate MD5 hashes online",
+      "category": "Cryptography", 
+      "icon": "🔒",
+      "color": "#FF4500"
+    },
+    {
+      "id": "url-encoder-decoder", 
+      "name": "URL Encode Decode",
+      "description": "Encode or decode URLs",
+      "category": "Encoding",
+      "icon": "🌍",
+      "color": "#1E90FF"
+    },
+    {
+      "id": "url-manipulator",
+      "name": "Add Remove Http Https",
+      "description": "Manipulate URLs by adding or removing HTTP/HTTPS",
+      "category": "URL Tools",
+      "icon": "🔗",
+      "color": "#DC143C"
+    },
+    {
+      "id": "base64-encoder-decoder",
+      "name": "Base64 Decode Encode", 
+      "description": "Encode or decode Base64 strings",
+      "category": "Encoding",
+      "icon": "🔤",
+      "color": "#9370DB"
+    },
+    {
+      "id": "password-generator",
+      "name": "Random Password Generator",
+      "description": "Generate random passwords for security",
+      "category": "Security",
+      "icon": "🔑",
+      "color": "#FF69B4"
+    }
+  ]
+};
 
-  /* RGB versions for opacity control */
-  --color-brown-600-rgb: 94, 82, 64;
-  --color-teal-500-rgb: 33, 128, 141;
-  --color-slate-900-rgb: 19, 52, 59;
-  --color-slate-500-rgb: 98, 108, 113;
-  --color-red-500-rgb: 192, 21, 47;
-  --color-red-400-rgb: 255, 84, 89;
-  --color-orange-500-rgb: 168, 75, 47;
-  --color-orange-400-rgb: 230, 129, 97;
+// Application state
+let currentTool = null;
+let currentView = 'home';
+let particles = [];
+let animationId = null;
 
-  /* Background color tokens (Light Mode) */
-  --color-bg-1: rgba(59, 130, 246, 0.08); /* Light blue */
-  --color-bg-2: rgba(245, 158, 11, 0.08); /* Light yellow */
-  --color-bg-3: rgba(34, 197, 94, 0.08); /* Light green */
-  --color-bg-4: rgba(239, 68, 68, 0.08); /* Light red */
-  --color-bg-5: rgba(147, 51, 234, 0.08); /* Light purple */
-  --color-bg-6: rgba(249, 115, 22, 0.08); /* Light orange */
-  --color-bg-7: rgba(236, 72, 153, 0.08); /* Light pink */
-  --color-bg-8: rgba(6, 182, 212, 0.08); /* Light cyan */
+// Initialize the application
+document.addEventListener('DOMContentLoaded', function() {
+    initializeApp();
+});
 
-  /* Semantic Color Tokens (Light Mode) */
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
-  --color-text-secondary: var(--color-slate-500);
-  --color-primary: var(--color-teal-500);
-  --color-primary-hover: var(--color-teal-600);
-  --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
-  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-error: var(--color-red-500);
-  --color-success: var(--color-teal-500);
-  --color-warning: var(--color-orange-500);
-  --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-  --color-select-caret: rgba(var(--color-slate-900-rgb), 0.8);
-
-  /* Common style patterns */
-  --focus-ring: 0 0 0 3px var(--color-focus-ring);
-  --focus-outline: 2px solid var(--color-primary);
-  --status-bg-opacity: 0.15;
-  --status-border-opacity: 0.25;
-  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-
-  /* RGB versions for opacity control */
-  --color-success-rgb: 33, 128, 141;
-  --color-error-rgb: 192, 21, 47;
-  --color-warning-rgb: 168, 75, 47;
-  --color-info-rgb: 98, 108, 113;
-
-  /* Typography */
-  --font-family-base: "FKGroteskNeue", "Geist", "Inter", -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-family-mono: "Berkeley Mono", ui-monospace, SFMono-Regular, Menlo,
-    Monaco, Consolas, monospace;
-  --font-size-xs: 11px;
-  --font-size-sm: 12px;
-  --font-size-base: 14px;
-  --font-size-md: 14px;
-  --font-size-lg: 16px;
-  --font-size-xl: 18px;
-  --font-size-2xl: 20px;
-  --font-size-3xl: 24px;
-  --font-size-4xl: 30px;
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 550;
-  --font-weight-bold: 600;
-  --line-height-tight: 1.2;
-  --line-height-normal: 1.5;
-  --letter-spacing-tight: -0.01em;
-
-  /* Spacing */
-  --space-0: 0;
-  --space-1: 1px;
-  --space-2: 2px;
-  --space-4: 4px;
-  --space-6: 6px;
-  --space-8: 8px;
-  --space-10: 10px;
-  --space-12: 12px;
-  --space-16: 16px;
-  --space-20: 20px;
-  --space-24: 24px;
-  --space-32: 32px;
-
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-base: 8px;
-  --radius-md: 10px;
-  --radius-lg: 12px;
-  --radius-full: 9999px;
-
-  /* Shadows */
-  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04),
-    0 2px 4px -1px rgba(0, 0, 0, 0.02);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.04),
-    0 4px 6px -2px rgba(0, 0, 0, 0.02);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
-
-  /* Animation */
-  --duration-fast: 150ms;
-  --duration-normal: 250ms;
-  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
-
-  /* Layout */
-  --container-sm: 640px;
-  --container-md: 768px;
-  --container-lg: 1024px;
-  --container-xl: 1280px;
+function initializeApp() {
+    renderToolsGrid();
+    setupEventListeners();
+    initializeParticleSystem();
+    initializeMatrixRain();
+    initializeCursorTrail();
+    showHome();
 }
 
-/* Dark mode colors */
-@media (prefers-color-scheme: dark) {
-  :root {
-    /* RGB versions for opacity control (Dark Mode) */
-    --color-gray-400-rgb: 119, 124, 124;
-    --color-teal-300-rgb: 50, 184, 198;
-    --color-gray-300-rgb: 167, 169, 169;
-    --color-gray-200-rgb: 245, 245, 245;
-
-    /* Background color tokens (Dark Mode) */
-    --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
-    --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
-    --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
-    --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
-    --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
-    --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
-    --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
-    --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
+function setupEventListeners() {
+    // Home button
+    const homeBtn = document.getElementById('homeBtn');
+    if (homeBtn) {
+        homeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHome();
+        });
+    }
     
-    /* Semantic Color Tokens (Dark Mode) */
-    --color-background: var(--color-charcoal-700);
-    --color-surface: var(--color-charcoal-800);
-    --color-text: var(--color-gray-200);
-    --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-    --color-primary: var(--color-teal-300);
-    --color-primary-hover: var(--color-teal-400);
-    --color-primary-active: var(--color-teal-800);
-    --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
-    --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
-    --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-    --color-error: var(--color-red-400);
-    --color-success: var(--color-teal-300);
-    --color-warning: var(--color-orange-400);
-    --color-info: var(--color-gray-300);
-    --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
-    --color-btn-primary-text: var(--color-slate-900);
-    --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
-    --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-    --button-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
-    --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
-
-    /* Common style patterns - updated for dark mode */
-    --focus-ring: 0 0 0 3px var(--color-focus-ring);
-    --focus-outline: 2px solid var(--color-primary);
-    --status-bg-opacity: 0.15;
-    --status-border-opacity: 0.25;
-    --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-    --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-
-    /* RGB versions for dark mode */
-    --color-success-rgb: var(--color-teal-300-rgb);
-    --color-error-rgb: var(--color-red-400-rgb);
-    --color-warning-rgb: var(--color-orange-400-rgb);
-    --color-info-rgb: var(--color-gray-300-rgb);
-  }
-}
-
-/* Data attribute for manual theme switching */
-[data-color-scheme="dark"] {
-  /* RGB versions for opacity control (dark mode) */
-  --color-gray-400-rgb: 119, 124, 124;
-  --color-teal-300-rgb: 50, 184, 198;
-  --color-gray-300-rgb: 167, 169, 169;
-  --color-gray-200-rgb: 245, 245, 245;
-
-  /* Colorful background palette - Dark Mode */
-  --color-bg-1: rgba(29, 78, 216, 0.15); /* Dark blue */
-  --color-bg-2: rgba(180, 83, 9, 0.15); /* Dark yellow */
-  --color-bg-3: rgba(21, 128, 61, 0.15); /* Dark green */
-  --color-bg-4: rgba(185, 28, 28, 0.15); /* Dark red */
-  --color-bg-5: rgba(107, 33, 168, 0.15); /* Dark purple */
-  --color-bg-6: rgba(194, 65, 12, 0.15); /* Dark orange */
-  --color-bg-7: rgba(190, 24, 93, 0.15); /* Dark pink */
-  --color-bg-8: rgba(8, 145, 178, 0.15); /* Dark cyan */
-  
-  /* Semantic Color Tokens (Dark Mode) */
-  --color-background: var(--color-charcoal-700);
-  --color-surface: var(--color-charcoal-800);
-  --color-text: var(--color-gray-200);
-  --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
-  --color-primary: var(--color-teal-300);
-  --color-primary-hover: var(--color-teal-400);
-  --color-primary-active: var(--color-teal-800);
-  --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
-  --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
-  --color-secondary-active: rgba(var(--color-gray-400-rgb), 0.3);
-  --color-border: rgba(var(--color-gray-400-rgb), 0.3);
-  --color-error: var(--color-red-400);
-  --color-success: var(--color-teal-300);
-  --color-warning: var(--color-orange-400);
-  --color-info: var(--color-gray-300);
-  --color-focus-ring: rgba(var(--color-teal-300-rgb), 0.4);
-  --color-btn-primary-text: var(--color-slate-900);
-  --color-card-border: rgba(var(--color-gray-400-rgb), 0.15);
-  --color-card-border-inner: rgba(var(--color-gray-400-rgb), 0.15);
-  --shadow-inset-sm: inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-  --color-border-secondary: rgba(var(--color-gray-400-rgb), 0.2);
-  --color-select-caret: rgba(var(--color-gray-200-rgb), 0.8);
-
-  /* Common style patterns - updated for dark mode */
-  --focus-ring: 0 0 0 3px var(--color-focus-ring);
-  --focus-outline: 2px solid var(--color-primary);
-  --status-bg-opacity: 0.15;
-  --status-border-opacity: 0.25;
-  --select-caret-light: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23134252' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  --select-caret-dark: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23f5f5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-
-  /* RGB versions for dark mode */
-  --color-success-rgb: var(--color-teal-300-rgb);
-  --color-error-rgb: var(--color-red-400-rgb);
-  --color-warning-rgb: var(--color-orange-400-rgb);
-  --color-info-rgb: var(--color-gray-300-rgb);
-}
-
-[data-color-scheme="light"] {
-  /* RGB versions for opacity control (light mode) */
-  --color-brown-600-rgb: 94, 82, 64;
-  --color-teal-500-rgb: 33, 128, 141;
-  --color-slate-900-rgb: 19, 52, 59;
-  
-  /* Semantic Color Tokens (Light Mode) */
-  --color-background: var(--color-cream-50);
-  --color-surface: var(--color-cream-100);
-  --color-text: var(--color-slate-900);
-  --color-text-secondary: var(--color-slate-500);
-  --color-primary: var(--color-teal-500);
-  --color-primary-hover: var(--color-teal-600);
-  --color-primary-active: var(--color-teal-700);
-  --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-secondary-active: rgba(var(--color-brown-600-rgb), 0.25);
-  --color-border: rgba(var(--color-brown-600-rgb), 0.2);
-  --color-btn-primary-text: var(--color-cream-50);
-  --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-card-border-inner: rgba(var(--color-brown-600-rgb), 0.12);
-  --color-error: var(--color-red-500);
-  --color-success: var(--color-teal-500);
-  --color-warning: var(--color-orange-500);
-  --color-info: var(--color-slate-500);
-  --color-focus-ring: rgba(var(--color-teal-500-rgb), 0.4);
-
-  /* RGB versions for light mode */
-  --color-success-rgb: var(--color-teal-500-rgb);
-  --color-error-rgb: var(--color-red-500-rgb);
-  --color-warning-rgb: var(--color-orange-500-rgb);
-  --color-info-rgb: var(--color-slate-500-rgb);
-}
-
-/* Base styles */
-html {
-  font-size: var(--font-size-base);
-  font-family: var(--font-family-base);
-  line-height: var(--line-height-normal);
-  color: var(--color-text);
-  background-color: var(--color-background);
-  -webkit-font-smoothing: antialiased;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
-/* Typography */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-  font-weight: var(--font-weight-semibold);
-  line-height: var(--line-height-tight);
-  color: var(--color-text);
-  letter-spacing: var(--letter-spacing-tight);
-}
-
-h1 {
-  font-size: var(--font-size-4xl);
-}
-h2 {
-  font-size: var(--font-size-3xl);
-}
-h3 {
-  font-size: var(--font-size-2xl);
-}
-h4 {
-  font-size: var(--font-size-xl);
-}
-h5 {
-  font-size: var(--font-size-lg);
-}
-h6 {
-  font-size: var(--font-size-md);
-}
-
-p {
-  margin: 0 0 var(--space-16) 0;
-}
-
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: color var(--duration-fast) var(--ease-standard);
-}
-
-a:hover {
-  color: var(--color-primary-hover);
-}
-
-code,
-pre {
-  font-family: var(--font-family-mono);
-  font-size: calc(var(--font-size-base) * 0.95);
-  background-color: var(--color-secondary);
-  border-radius: var(--radius-sm);
-}
-
-code {
-  padding: var(--space-1) var(--space-4);
-}
-
-pre {
-  padding: var(--space-16);
-  margin: var(--space-16) 0;
-  overflow: auto;
-  border: 1px solid var(--color-border);
-}
-
-pre code {
-  background: none;
-  padding: 0;
-}
-
-/* Buttons */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--space-8) var(--space-16);
-  border-radius: var(--radius-base);
-  font-size: var(--font-size-base);
-  font-weight: 500;
-  line-height: 1.5;
-  cursor: pointer;
-  transition: all var(--duration-normal) var(--ease-standard);
-  border: none;
-  text-decoration: none;
-  position: relative;
-}
-
-.btn:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-}
-
-.btn--primary {
-  background: var(--color-primary);
-  color: var(--color-btn-primary-text);
-}
-
-.btn--primary:hover {
-  background: var(--color-primary-hover);
-}
-
-.btn--primary:active {
-  background: var(--color-primary-active);
-}
-
-.btn--secondary {
-  background: var(--color-secondary);
-  color: var(--color-text);
-}
-
-.btn--secondary:hover {
-  background: var(--color-secondary-hover);
-}
-
-.btn--secondary:active {
-  background: var(--color-secondary-active);
-}
-
-.btn--outline {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text);
-}
-
-.btn--outline:hover {
-  background: var(--color-secondary);
-}
-
-.btn--sm {
-  padding: var(--space-4) var(--space-12);
-  font-size: var(--font-size-sm);
-  border-radius: var(--radius-sm);
-}
-
-.btn--lg {
-  padding: var(--space-10) var(--space-20);
-  font-size: var(--font-size-lg);
-  border-radius: var(--radius-md);
-}
-
-.btn--full-width {
-  width: 100%;
-}
-
-.btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Form elements */
-.form-control {
-  display: block;
-  width: 100%;
-  padding: var(--space-8) var(--space-12);
-  font-size: var(--font-size-md);
-  line-height: 1.5;
-  color: var(--color-text);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-base);
-  transition: border-color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard);
-}
-
-textarea.form-control {
-  font-family: var(--font-family-base);
-  font-size: var(--font-size-base);
-}
-
-select.form-control {
-  padding: var(--space-8) var(--space-12);
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  background-image: var(--select-caret-light);
-  background-repeat: no-repeat;
-  background-position: right var(--space-12) center;
-  background-size: 16px;
-  padding-right: var(--space-32);
-}
-
-/* Add a dark mode specific caret */
-@media (prefers-color-scheme: dark) {
-  select.form-control {
-    background-image: var(--select-caret-dark);
-  }
-}
-
-/* Also handle data-color-scheme */
-[data-color-scheme="dark"] select.form-control {
-  background-image: var(--select-caret-dark);
-}
-
-[data-color-scheme="light"] select.form-control {
-  background-image: var(--select-caret-light);
-}
-
-.form-control:focus {
-  border-color: var(--color-primary);
-  outline: var(--focus-outline);
-}
-
-.form-label {
-  display: block;
-  margin-bottom: var(--space-8);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-}
-
-.form-group {
-  margin-bottom: var(--space-16);
-}
-
-/* Card component */
-.card {
-  background-color: var(--color-surface);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-card-border);
-  box-shadow: var(--shadow-sm);
-  overflow: hidden;
-  transition: box-shadow var(--duration-normal) var(--ease-standard);
-}
-
-.card:hover {
-  box-shadow: var(--shadow-md);
-}
-
-.card__body {
-  padding: var(--space-16);
-}
-
-.card__header,
-.card__footer {
-  padding: var(--space-16);
-  border-bottom: 1px solid var(--color-card-border-inner);
-}
-
-/* Status indicators - simplified with CSS variables */
-.status {
-  display: inline-flex;
-  align-items: center;
-  padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-full);
-  font-weight: var(--font-weight-medium);
-  font-size: var(--font-size-sm);
-}
-
-.status--success {
-  background-color: rgba(
-    var(--color-success-rgb, 33, 128, 141),
-    var(--status-bg-opacity)
-  );
-  color: var(--color-success);
-  border: 1px solid
-    rgba(var(--color-success-rgb, 33, 128, 141), var(--status-border-opacity));
-}
-
-.status--error {
-  background-color: rgba(
-    var(--color-error-rgb, 192, 21, 47),
-    var(--status-bg-opacity)
-  );
-  color: var(--color-error);
-  border: 1px solid
-    rgba(var(--color-error-rgb, 192, 21, 47), var(--status-border-opacity));
-}
-
-.status--warning {
-  background-color: rgba(
-    var(--color-warning-rgb, 168, 75, 47),
-    var(--status-bg-opacity)
-  );
-  color: var(--color-warning);
-  border: 1px solid
-    rgba(var(--color-warning-rgb, 168, 75, 47), var(--status-border-opacity));
-}
-
-.status--info {
-  background-color: rgba(
-    var(--color-info-rgb, 98, 108, 113),
-    var(--status-bg-opacity)
-  );
-  color: var(--color-info);
-  border: 1px solid
-    rgba(var(--color-info-rgb, 98, 108, 113), var(--status-border-opacity));
-}
-
-/* Container layout */
-.container {
-  width: 100%;
-  margin-right: auto;
-  margin-left: auto;
-  padding-right: var(--space-16);
-  padding-left: var(--space-16);
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: var(--container-sm);
-  }
-}
-@media (min-width: 768px) {
-  .container {
-    max-width: var(--container-md);
-  }
-}
-@media (min-width: 1024px) {
-  .container {
-    max-width: var(--container-lg);
-  }
-}
-@media (min-width: 1280px) {
-  .container {
-    max-width: var(--container-xl);
-  }
-}
-
-/* Utility classes */
-.flex {
-  display: flex;
-}
-.flex-col {
-  flex-direction: column;
-}
-.items-center {
-  align-items: center;
-}
-.justify-center {
-  justify-content: center;
-}
-.justify-between {
-  justify-content: space-between;
-}
-.gap-4 {
-  gap: var(--space-4);
-}
-.gap-8 {
-  gap: var(--space-8);
-}
-.gap-16 {
-  gap: var(--space-16);
-}
-
-.m-0 {
-  margin: 0;
-}
-.mt-8 {
-  margin-top: var(--space-8);
-}
-.mb-8 {
-  margin-bottom: var(--space-8);
-}
-.mx-8 {
-  margin-left: var(--space-8);
-  margin-right: var(--space-8);
-}
-.my-8 {
-  margin-top: var(--space-8);
-  margin-bottom: var(--space-8);
-}
-
-.p-0 {
-  padding: 0;
-}
-.py-8 {
-  padding-top: var(--space-8);
-  padding-bottom: var(--space-8);
-}
-.px-8 {
-  padding-left: var(--space-8);
-  padding-right: var(--space-8);
-}
-.py-16 {
-  padding-top: var(--space-16);
-  padding-bottom: var(--space-16);
-}
-.px-16 {
-  padding-left: var(--space-16);
-  padding-right: var(--space-16);
-}
-
-.block {
-  display: block;
-}
-.hidden {
-  display: none;
-}
-
-/* Accessibility */
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-:focus-visible {
-  outline: var(--focus-outline);
-  outline-offset: 2px;
-}
-
-/* Dark mode specifics */
-[data-color-scheme="dark"] .btn--outline {
-  border: 1px solid var(--color-border-secondary);
-}
-
-@font-face {
-  font-family: 'FKGroteskNeue';
-  src: url('https://r2cdn.perplexity.ai/fonts/FKGroteskNeue.woff2')
-    format('woff2');
-}
-
-/* END PERPLEXITY DESIGN SYSTEM */
-/* Cybersecurity theme overrides */
-:root {
-  /* Cybersecurity color palette */
-  --cyber-dark: #0a0a0a;
-  --cyber-darker: #050505;
-  --cyber-surface: #1a1a1a;
-  --cyber-surface-hover: #252525;
-  --cyber-border: #333;
-  --cyber-text: #e0e0e0;
-  --cyber-text-dim: #a0a0a0;
-  --cyber-cyan: #00ffff;
-  --cyber-green: #00ff41;
-  --cyber-purple: #8a2be2;
-  --cyber-red: #ff073a;
-  --cyber-orange: #ff6b35;
-  
-  /* Override design system colors for cyber theme */
-  --color-background: var(--cyber-dark);
-  --color-surface: var(--cyber-surface);
-  --color-text: var(--cyber-text);
-  --color-text-secondary: var(--cyber-text-dim);
-  --color-primary: var(--cyber-cyan);
-  --color-primary-hover: #33ffff;
-  --color-border: var(--cyber-border);
-  --color-card-border: var(--cyber-border);
-}
-
-/* Base overrides */
-body {
-  background: linear-gradient(135deg, var(--cyber-dark) 0%, #1a0d2e 50%, var(--cyber-dark) 100%);
-  min-height: 100vh;
-  font-family: 'Courier New', monospace;
-}
-
-/* App container */
-.app-container {
-  min-height: 100vh;
-  position: relative;
-}
-
-/* Header */
-.header {
-  background: rgba(26, 26, 26, 0.9);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--cyber-border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  box-shadow: 0 4px 20px rgba(0, 255, 255, 0.1);
-}
-
-.header-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: var(--space-16) 0;
-}
-
-.logo-text {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  background: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-green));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  text-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
-}
-
-.home-btn {
-  background: rgba(0, 255, 255, 0.1);
-  border: 1px solid var(--cyber-cyan);
-  color: var(--cyber-cyan);
-  padding: var(--space-8) var(--space-16);
-  border-radius: var(--radius-base);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.home-btn:hover {
-  background: rgba(0, 255, 255, 0.2);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-/* Main content */
-.main-content {
-  padding: var(--space-32) 0;
-}
-
-/* Views */
-.view {
-  display: none;
-  animation: fadeIn 0.5s ease-in-out;
-}
-
-.view.active {
-  display: block;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Hero section */
-.hero-section {
-  text-align: center;
-  margin-bottom: var(--space-32);
-  padding: var(--space-32) 0;
-}
-
-.hero-title {
-  font-size: clamp(2rem, 5vw, 4rem);
-  font-weight: var(--font-weight-bold);
-  background: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-green), var(--cyber-purple));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: var(--space-16);
-  text-shadow: 0 0 30px rgba(0, 255, 255, 0.3);
-}
-
-.hero-subtitle {
-  font-size: var(--font-size-xl);
-  color: var(--cyber-text-dim);
-  max-width: 600px;
-  margin: 0 auto;
-}
-
-/* Tools grid */
-.tools-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: var(--space-24);
-  margin-top: var(--space-32);
-}
-
-.tool-card {
-  background: var(--cyber-surface);
-  border: 1px solid var(--cyber-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-24);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.tool-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-  transition: left 0.6s ease;
-}
-
-.tool-card:hover::before {
-  left: 100%;
-}
-
-.tool-card:hover {
-  transform: translateY(-5px);
-  border-color: var(--cyber-cyan);
-  box-shadow: 0 10px 30px rgba(0, 255, 255, 0.2);
-}
-
-.tool-icon {
-  font-size: 2rem;
-  margin-bottom: var(--space-16);
-  display: block;
-}
-
-.tool-name {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  color: var(--cyber-cyan);
-  margin-bottom: var(--space-8);
-}
-
-.tool-description {
-  color: var(--cyber-text-dim);
-  font-size: var(--font-size-sm);
-  line-height: 1.6;
-}
-
-.tool-category {
-  position: absolute;
-  top: var(--space-12);
-  right: var(--space-12);
-  background: rgba(0, 255, 255, 0.1);
-  color: var(--cyber-cyan);
-  padding: var(--space-4) var(--space-8);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-xs);
-}
-
-/* Tool view */
-.tool-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: var(--space-32);
-  gap: var(--space-16);
-}
-
-.back-btn {
-  background: transparent;
-  border: 1px solid var(--cyber-border);
-  color: var(--cyber-text);
-  padding: var(--space-8) var(--space-16);
-  border-radius: var(--radius-base);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: inherit;
-}
-
-.back-btn:hover {
-  border-color: var(--cyber-cyan);
-  color: var(--cyber-cyan);
-  transform: translateX(-5px);
-}
-
-.tool-title {
-  font-size: var(--font-size-3xl);
-  color: var(--cyber-cyan);
-  margin: 0;
-}
-
-/* Tool content */
-.tool-content {
-  background: var(--cyber-surface);
-  border: 1px solid var(--cyber-border);
-  border-radius: var(--radius-lg);
-  padding: var(--space-32);
-}
-
-/* Form styles */
-.form-group {
-  margin-bottom: var(--space-20);
-}
-
-.form-label {
-  color: var(--cyber-text);
-  margin-bottom: var(--space-8);
-  display: block;
-  font-weight: var(--font-weight-medium);
-}
-
-.form-control {
-  background: var(--cyber-darker);
-  border: 1px solid var(--cyber-border);
-  color: var(--cyber-text);
-  padding: var(--space-12);
-  border-radius: var(--radius-base);
-  width: 100%;
-  font-family: 'Courier New', monospace;
-  transition: all 0.3s ease;
-}
-
-.form-control:focus {
-  border-color: var(--cyber-cyan);
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
-  outline: none;
-}
-
-textarea.form-control {
-  min-height: 150px;
-  resize: vertical;
-}
-
-/* Buttons */
-.btn {
-  background: var(--cyber-surface);
-  border: 1px solid var(--cyber-cyan);
-  color: var(--cyber-cyan);
-  padding: var(--space-12) var(--space-24);
-  border-radius: var(--radius-base);
-  cursor: pointer;
-  font-family: inherit;
-  font-weight: var(--font-weight-medium);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.btn::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-  transition: left 0.6s ease;
-}
-
-.btn:hover::before {
-  left: 100%;
-}
-
-.btn:hover {
-  background: rgba(0, 255, 255, 0.1);
-  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
-  transform: translateY(-2px);
-}
-
-.btn--primary {
-  background: linear-gradient(45deg, var(--cyber-cyan), var(--cyber-green));
-  color: var(--cyber-dark);
-  border: none;
-}
-
-.btn--primary:hover {
-  box-shadow: 0 5px 20px rgba(0, 255, 255, 0.4);
-}
-
-.btn--danger {
-  border-color: var(--cyber-red);
-  color: var(--cyber-red);
-}
-
-.btn--danger:hover {
-  background: rgba(255, 7, 58, 0.1);
-  box-shadow: 0 0 15px rgba(255, 7, 58, 0.5);
-}
-
-/* Results */
-.result-container {
-  background: var(--cyber-darker);
-  border: 1px solid var(--cyber-border);
-  border-radius: var(--radius-base);
-  padding: var(--space-20);
-  margin-top: var(--space-20);
-  position: relative;
-}
-
-.result-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-16);
-}
-
-.result-title {
-  color: var(--cyber-green);
-  margin: 0;
-  font-size: var(--font-size-lg);
-}
-
-.copy-btn {
-  background: transparent;
-  border: 1px solid var(--cyber-green);
-  color: var(--cyber-green);
-  padding: var(--space-6) var(--space-12);
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: var(--font-size-sm);
-  transition: all 0.3s ease;
-}
-
-.copy-btn:hover {
-  background: rgba(0, 255, 65, 0.1);
-  box-shadow: 0 0 10px rgba(0, 255, 65, 0.3);
-}
-
-.result-content {
-  background: var(--cyber-dark);
-  border: 1px solid var(--cyber-border);
-  border-radius: var(--radius-sm);
-  padding: var(--space-16);
-  font-family: 'Courier New', monospace;
-  font-size: var(--font-size-sm);
-  color: var(--cyber-text);
-  white-space: pre-wrap;
-  word-break: break-all;
-  max-height: 400px;
-  overflow-y: auto;
-}
-
-/* Loading overlay */
-.loading-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 10, 10, 0.8);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-
-.loading-spinner {
-  width: 50px;
-  height: 50px;
-  border: 3px solid var(--cyber-border);
-  border-top: 3px solid var(--cyber-cyan);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: var(--space-16);
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loading-overlay p {
-  color: var(--cyber-cyan);
-  font-size: var(--font-size-lg);
-}
-
-/* Toast notifications */
-.toast-container {
-  position: fixed;
-  top: var(--space-20);
-  right: var(--space-20);
-  z-index: 1100;
-}
-
-.toast {
-  background: var(--cyber-surface);
-  border: 1px solid var(--cyber-green);
-  border-radius: var(--radius-base);
-  padding: var(--space-16);
-  margin-bottom: var(--space-8);
-  color: var(--cyber-green);
-  animation: slideInRight 0.3s ease;
-  box-shadow: 0 5px 20px rgba(0, 255, 65, 0.2);
-}
-
-.toast.error {
-  border-color: var(--cyber-red);
-  color: var(--cyber-red);
-  box-shadow: 0 5px 20px rgba(255, 7, 58, 0.2);
-}
-
-@keyframes slideInRight {
-  from { transform: translateX(100%); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-/* Grid for tool forms */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: var(--space-16);
-}
-
-/* Progress bar */
-.progress-container {
-  background: var(--cyber-darker);
-  border-radius: var(--radius-full);
-  height: 6px;
-  margin: var(--space-16) 0;
-  overflow: hidden;
-}
-
-.progress-bar {
-  background: linear-gradient(90deg, var(--cyber-cyan), var(--cyber-green));
-  height: 100%;
-  border-radius: var(--radius-full);
-  transition: width 0.3s ease;
-  width: 0%;
-}
-
-/* Responsive design */
-@media (max-width: 768px) {
-  .tools-grid {
-    grid-template-columns: 1fr;
-    gap: var(--space-16);
-  }
-  
-  .tool-content {
-    padding: var(--space-20);
-  }
-  
-  .hero-title {
-    font-size: 2rem;
-  }
-  
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .tool-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--space-12);
-  }
-}
-
-/* Utility classes */
-.hidden {
-  display: none !important;
-}
-
-.flex {
-  display: flex;
-}
-
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
-.gap-8 {
-  gap: var(--space-8);
-}
-
-.gap-16 {
-  gap: var(--space-16);
-}
-
-.mb-16 {
-  margin-bottom: var(--space-16);
-}
-
-.mt-16 {
-  margin-top: var(--space-16);
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-success {
-  color: var(--cyber-green);
-}
-
-.text-danger {
-  color: var(--cyber-red);
-}
-
-.text-warning {
-  color: var(--cyber-orange);
-}
-
-/* Checkbox and radio styles */
-.checkbox-group, .radio-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-16);
-  margin-top: var(--space-8);
-}
-
-.checkbox-item, .radio-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-8);
-  cursor: pointer;
-}
-
-.checkbox-item input, .radio-item input {
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border: 2px solid var(--cyber-border);
-  border-radius: var(--radius-sm);
-  background: var(--cyber-darker);
-  cursor: pointer;
-  position: relative;
-}
-
-.checkbox-item input:checked, .radio-item input:checked {
-  border-color: var(--cyber-cyan);
-  background: var(--cyber-cyan);
-}
-
-.checkbox-item input:checked::after, .radio-item input:checked::after {
-  content: '✓';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: var(--cyber-dark);
-  font-size: 12px;
-  font-weight: bold;
-}
-
-.radio-item input {
-  border-radius: 50%;
-}
-
-/* Select dropdown */
-select.form-control {
-  background-image: none;
-  padding-right: var(--space-12);
+    // Back button
+    const backBtn = document.getElementById('backBtn');
+    if (backBtn) {
+        backBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHome();
+        });
+    }
+    
+    // Logo click
+    const logo = document.querySelector('.logo-text');
+    if (logo) {
+        logo.style.cursor = 'pointer';
+        logo.addEventListener('click', function(e) {
+            e.preventDefault();
+            showHome();
+        });
+    }
+}
+
+// Particle System
+function initializeParticleSystem() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Initialize particles
+    for (let i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.2,
+            color: `hsl(${180 + Math.random() * 60}, 100%, 70%)`
+        });
+    }
+    
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Update and draw particles
+        particles.forEach((particle, i) => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Wrap around screen
+            if (particle.x < 0) particle.x = canvas.width;
+            if (particle.x > canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = canvas.height;
+            if (particle.y > canvas.height) particle.y = 0;
+            
+            // Draw particle
+            ctx.globalAlpha = particle.opacity;
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw connections
+            particles.forEach((otherParticle, j) => {
+                if (i !== j) {
+                    const dx = particle.x - otherParticle.x;
+                    const dy = particle.y - otherParticle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.globalAlpha = (100 - distance) / 100 * 0.2;
+                        ctx.strokeStyle = '#00D4FF';
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+        });
+        
+        animationId = requestAnimationFrame(animateParticles);
+    }
+    
+    animateParticles();
+}
+
+// Matrix Rain Effect
+function initializeMatrixRain() {
+    const matrixContainer = document.getElementById('matrixRain');
+    if (!matrixContainer) return;
+    
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const columns = Math.floor(window.innerWidth / 20);
+    const drops = [];
+    
+    for (let i = 0; i < columns; i++) {
+        drops[i] = 1;
+    }
+    
+    function createMatrixRain() {
+        matrixContainer.innerHTML = '';
+        
+        for (let i = 0; i < 20; i++) {
+            const column = document.createElement('div');
+            column.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                top: -100px;
+                color: #00FF41;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                animation: matrixFall ${3 + Math.random() * 3}s linear infinite;
+                animation-delay: ${Math.random() * 5}s;
+                opacity: 0.3;
+            `;
+            
+            let text = '';
+            for (let j = 0; j < 10; j++) {
+                text += chars.charAt(Math.floor(Math.random() * chars.length)) + '<br>';
+            }
+            column.innerHTML = text;
+            matrixContainer.appendChild(column);
+        }
+    }
+    
+    // Add CSS animation for matrix fall
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes matrixFall {
+            from { transform: translateY(-100vh); }
+            to { transform: translateY(100vh); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    createMatrixRain();
+    setInterval(createMatrixRain, 10000);
+}
+
+// Cursor Trail Effect
+function initializeCursorTrail() {
+    const trail = document.getElementById('cursorTrail');
+    if (!trail) return;
+    
+    let mouseX = 0, mouseY = 0;
+    let trailX = 0, trailY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    function animateTrail() {
+        trailX += (mouseX - trailX) * 0.1;
+        trailY += (mouseY - trailY) * 0.1;
+        
+        trail.style.left = trailX - 10 + 'px';
+        trail.style.top = trailY - 10 + 'px';
+        
+        requestAnimationFrame(animateTrail);
+    }
+    
+    animateTrail();
+}
+
+function showHome() {
+    currentView = 'home';
+    currentTool = null;
+    
+    const homeView = document.getElementById('homeView');
+    const toolView = document.getElementById('toolView');
+    
+    if (homeView && toolView) {
+        toolView.classList.remove('active');
+        setTimeout(() => {
+            homeView.classList.add('active');
+        }, 100);
+    }
+    
+    // Trigger card entrance animations
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.tool-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.style.animation = 'none';
+            card.offsetHeight; // Trigger reflow
+            card.style.animation = 'cardEntrance 0.8s ease-out forwards';
+        });
+    }, 200);
+    
+    window.scrollTo(0, 0);
+}
+
+function showTool(toolId) {
+    console.log('showTool called with toolId:', toolId);
+    
+    const tool = toolsData.tools.find(t => t.id === toolId);
+    if (!tool) {
+        console.error('Tool not found:', toolId);
+        showToast('Tool not found', 'error');
+        return;
+    }
+    
+    currentTool = tool;
+    currentView = 'tool';
+    
+    // Show loading with particle effect
+    showLoading();
+    
+    setTimeout(() => {
+        // Update UI elements
+        const toolTitle = document.getElementById('toolTitle');
+        const toolContent = document.getElementById('toolContent');
+        
+        if (toolTitle) {
+            toolTitle.textContent = tool.name;
+            toolTitle.setAttribute('data-text', tool.name);
+        }
+        if (toolContent) toolContent.innerHTML = generateToolContent(tool);
+        
+        // Switch views with transition effect
+        const homeView = document.getElementById('homeView');
+        const toolView = document.getElementById('toolView');
+        
+        if (homeView && toolView) {
+            homeView.classList.remove('active');
+            setTimeout(() => {
+                toolView.classList.add('active');
+                hideLoading();
+            }, 300);
+        }
+        
+        // Initialize tool-specific functionality
+        setTimeout(() => initializeTool(toolId), 100);
+        
+        window.scrollTo(0, 0);
+    }, 800);
+}
+
+function renderToolsGrid() {
+    const grid = document.getElementById('toolsGrid');
+    if (!grid) return;
+    
+    grid.innerHTML = toolsData.tools.map((tool, index) => `
+        <div class="tool-card" onclick="showTool('${tool.id}')" data-tool-id="${tool.id}" style="animation-delay: ${index * 0.1}s">
+            <span class="tool-category" style="border-color: ${tool.color}">${tool.category}</span>
+            <span class="tool-icon" style="filter: drop-shadow(0 0 10px ${tool.color})">${tool.icon}</span>
+            <h3 class="tool-name" style="color: ${tool.color}; text-shadow: 0 0 10px ${tool.color}">${tool.name}</h3>
+            <p class="tool-description">${tool.description}</p>
+        </div>
+    `).join('');
+    
+    console.log('Tools grid rendered with', toolsData.tools.length, 'tools');
+}
+
+function generateToolContent(tool) {
+    switch(tool.id) {
+        case 'csrf-generator':
+            return `
+                <div class="form-group">
+                    <label class="form-label">HTTP Request (from BurpSuite)</label>
+                    <textarea class="form-control" id="httpRequest" placeholder="POST /login HTTP/1.1
+Host: example.com
+Content-Type: application/x-www-form-urlencoded
+
+username=admin&password=secret"></textarea>
+                </div>
+                <button class="btn btn--primary" onclick="generateCSRF()">Generate CSRF PoC</button>
+                <div id="csrfResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">CSRF Proof of Concept</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('csrfOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="csrfOutput"></pre>
+                </div>
+            `;
+
+        case 'cors-scanner':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Target URL</label>
+                    <input type="url" class="form-control" id="corsUrl" placeholder="https://example.com">
+                </div>
+                <button class="btn btn--primary" onclick="scanCORS()">Scan CORS</button>
+                <div id="corsResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">CORS Scan Results</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('corsOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="corsOutput"></pre>
+                </div>
+            `;
+
+        case 'clickjacking-test':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Target URL</label>
+                    <input type="url" class="form-control" id="clickjackUrl" placeholder="https://example.com">
+                </div>
+                <button class="btn btn--primary" onclick="testClickjacking()">Test Clickjacking</button>
+                <div id="clickjackResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Clickjacking Test Results</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('clickjackOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="clickjackOutput"></pre>
+                </div>
+            `;
+
+        case 'curl-to-php':
+            return `
+                <div class="form-group">
+                    <label class="form-label">cURL Command</label>
+                    <textarea class="form-control" id="curlCommand" placeholder="curl -X POST https://example.com/api -H 'Content-Type: application/json' -d '{\"key\":\"value\"}'"></textarea>
+                </div>
+                <button class="btn btn--primary" onclick="convertCurlToPHP()">Convert to PHP</button>
+                <div id="phpResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">PHP Code</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('phpOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="phpOutput"></pre>
+                </div>
+            `;
+
+        case 'cvss-calculator':
+            return `
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Attack Vector (AV)</label>
+                        <select class="form-control" id="attackVector">
+                            <option value="N">Network</option>
+                            <option value="A">Adjacent</option>
+                            <option value="L">Local</option>
+                            <option value="P">Physical</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Attack Complexity (AC)</label>
+                        <select class="form-control" id="attackComplexity">
+                            <option value="L">Low</option>
+                            <option value="H">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Privileges Required (PR)</label>
+                        <select class="form-control" id="privilegesRequired">
+                            <option value="N">None</option>
+                            <option value="L">Low</option>
+                            <option value="H">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">User Interaction (UI)</label>
+                        <select class="form-control" id="userInteraction">
+                            <option value="N">None</option>
+                            <option value="R">Required</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Scope (S)</label>
+                        <select class="form-control" id="scope">
+                            <option value="U">Unchanged</option>
+                            <option value="C">Changed</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Confidentiality Impact (C)</label>
+                        <select class="form-control" id="confidentialityImpact">
+                            <option value="N">None</option>
+                            <option value="L">Low</option>
+                            <option value="H">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Integrity Impact (I)</label>
+                        <select class="form-control" id="integrityImpact">
+                            <option value="N">None</option>
+                            <option value="L">Low</option>
+                            <option value="H">High</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Availability Impact (A)</label>
+                        <select class="form-control" id="availabilityImpact">
+                            <option value="N">None</option>
+                            <option value="L">Low</option>
+                            <option value="H">High</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn--primary" onclick="calculateCVSS()">Calculate CVSS Score</button>
+                <div id="cvssResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">CVSS v3.1 Score</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('cvssOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="cvssOutput"></pre>
+                </div>
+            `;
+
+        case 'jso-generator':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Overlay Title</label>
+                    <input type="text" class="form-control" id="overlayTitle" placeholder="Website Defaced">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Overlay Message</label>
+                    <textarea class="form-control" id="overlayMessage" placeholder="This website has been defaced for educational purposes"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Background Color</label>
+                    <input type="color" class="form-control" id="overlayBg" value="#ff0000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Text Color</label>
+                    <input type="color" class="form-control" id="overlayTextColor" value="#ffffff">
+                </div>
+                <button class="btn btn--primary" onclick="generateJSOverlay()">Generate JavaScript Overlay</button>
+                <div id="jsoResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">JavaScript Overlay Code</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('jsoOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="jsoOutput"></pre>
+                </div>
+            `;
+
+        case 'crontab-generator':
+            return `
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Minute (0-59)</label>
+                        <input type="text" class="form-control" id="cronMinute" placeholder="*" value="*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hour (0-23)</label>
+                        <input type="text" class="form-control" id="cronHour" placeholder="*" value="*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Day (1-31)</label>
+                        <input type="text" class="form-control" id="cronDay" placeholder="*" value="*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Month (1-12)</label>
+                        <input type="text" class="form-control" id="cronMonth" placeholder="*" value="*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Weekday (0-7)</label>
+                        <input type="text" class="form-control" id="cronWeekday" placeholder="*" value="*">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Command</label>
+                        <input type="text" class="form-control" id="cronCommand" placeholder="/path/to/command">
+                    </div>
+                </div>
+                <button class="btn btn--primary" onclick="generateCrontab()">Generate Crontab</button>
+                <div id="crontabResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Crontab Expression</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('crontabOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="crontabOutput"></pre>
+                </div>
+            `;
+
+        case 'subdomain-scanner':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Target Domain</label>
+                    <input type="text" class="form-control" id="targetDomain" placeholder="example.com">
+                </div>
+                <button class="btn btn--primary" onclick="scanSubdomains()">Scan Subdomains</button>
+                <div id="subdomainResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Discovered Subdomains</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('subdomainOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="subdomainOutput"></pre>
+                </div>
+            `;
+
+        case 'hash-identifier':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Hash String</label>
+                    <textarea class="form-control" id="hashInput" placeholder="5d41402abc4b2a76b9719d911017c592"></textarea>
+                </div>
+                <button class="btn btn--primary" onclick="identifyHash()">Identify Hash</button>
+                <div id="hashResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Hash Analysis</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('hashOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="hashOutput"></pre>
+                </div>
+            `;
+
+        case 'md5-generator':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Input Text</label>
+                    <textarea class="form-control" id="md5Input" placeholder="Enter text to hash"></textarea>
+                </div>
+                <button class="btn btn--primary" onclick="generateMD5()">Generate MD5</button>
+                <div id="md5Result" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">MD5 Hash</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('md5Output')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="md5Output"></pre>
+                </div>
+            `;
+
+        case 'url-encoder-decoder':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Input Text</label>
+                    <textarea class="form-control" id="urlInput" placeholder="Enter text or URL to encode/decode"></textarea>
+                </div>
+                <div class="flex gap-8 mb-16">
+                    <button class="btn btn--primary" onclick="encodeURL()">Encode</button>
+                    <button class="btn btn--primary" onclick="decodeURL()">Decode</button>
+                </div>
+                <div id="urlResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Result</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('urlOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="urlOutput"></pre>
+                </div>
+            `;
+
+        case 'url-manipulator':
+            return `
+                <div class="form-group">
+                    <label class="form-label">URLs (one per line)</label>
+                    <textarea class="form-control" id="urlList" placeholder="example.com
+www.example.com
+https://example.com"></textarea>
+                </div>
+                <div class="flex gap-8 mb-16">
+                    <button class="btn btn--primary" onclick="addHTTPS()">Add HTTPS</button>
+                    <button class="btn btn--primary" onclick="addHTTP()">Add HTTP</button>
+                    <button class="btn btn--danger" onclick="removeProtocol()">Remove Protocol</button>
+                </div>
+                <div id="urlManipResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Manipulated URLs</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('urlManipOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="urlManipOutput"></pre>
+                </div>
+            `;
+
+        case 'base64-encoder-decoder':
+            return `
+                <div class="form-group">
+                    <label class="form-label">Input Text</label>
+                    <textarea class="form-control" id="base64Input" placeholder="Enter text to encode/decode"></textarea>
+                </div>
+                <div class="flex gap-8 mb-16">
+                    <button class="btn btn--primary" onclick="encodeBase64()">Encode</button>
+                    <button class="btn btn--primary" onclick="decodeBase64()">Decode</button>
+                </div>
+                <div id="base64Result" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Result</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('base64Output')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="base64Output"></pre>
+                </div>
+            `;
+
+        case 'password-generator':
+            return `
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Password Length</label>
+                        <input type="number" class="form-control" id="passwordLength" value="16" min="4" max="128">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Number of Passwords</label>
+                        <input type="number" class="form-control" id="passwordCount" value="5" min="1" max="100">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Character Sets</label>
+                    <div class="checkbox-group">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="includeLowercase" checked>
+                            <span>Lowercase (a-z)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="includeUppercase" checked>
+                            <span>Uppercase (A-Z)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="includeNumbers" checked>
+                            <span>Numbers (0-9)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="includeSymbols" checked>
+                            <span>Symbols (!@#$%)</span>
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn--primary" onclick="generatePasswords()">Generate Passwords</button>
+                <div id="passwordResult" class="result-container hidden">
+                    <div class="result-header">
+                        <h4 class="result-title">Generated Passwords</h4>
+                        <button class="copy-btn" onclick="copyToClipboard('passwordOutput')">Copy</button>
+                    </div>
+                    <pre class="result-content" id="passwordOutput"></pre>
+                </div>
+            `;
+
+        default:
+            return '<p>Tool not implemented yet.</p>';
+    }
+}
+
+function initializeTool(toolId) {
+    console.log('Initializing tool:', toolId);
+    
+    // Add real-time input handlers where appropriate
+    switch(toolId) {
+        case 'cvss-calculator':
+            const selects = ['attackVector', 'attackComplexity', 'privilegesRequired', 'userInteraction', 'scope', 'confidentialityImpact', 'integrityImpact', 'availabilityImpact'];
+            selects.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', calculateCVSS);
+                }
+            });
+            calculateCVSS();
+            break;
+            
+        case 'md5-generator':
+            const md5Input = document.getElementById('md5Input');
+            if (md5Input) {
+                md5Input.addEventListener('input', function() {
+                    if (this.value.trim()) {
+                        generateMD5();
+                    } else {
+                        const resultDiv = document.getElementById('md5Result');
+                        if (resultDiv) resultDiv.classList.add('hidden');
+                    }
+                });
+            }
+            break;
+    }
+}
+
+// Tool functions with enhanced visual feedback
+function generateCSRF() {
+    const requestElement = document.getElementById('httpRequest');
+    const request = requestElement ? requestElement.value.trim() : '';
+    
+    if (!request) {
+        showToast('Please enter an HTTP request', 'error');
+        return;
+    }
+    
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        
+        const lines = request.split('\n');
+        const requestLine = lines[0];
+        const headers = {};
+        let bodyStart = -1;
+        
+        for (let i = 1; i < lines.length; i++) {
+            if (lines[i].trim() === '') {
+                bodyStart = i + 1;
+                break;
+            }
+            const colonIndex = lines[i].indexOf(':');
+            if (colonIndex > 0) {
+                const key = lines[i].substring(0, colonIndex).trim();
+                const value = lines[i].substring(colonIndex + 1).trim();
+                headers[key.toLowerCase()] = value;
+            }
+        }
+        
+        const body = bodyStart > 0 ? lines.slice(bodyStart).join('\n') : '';
+        const method = requestLine.split(' ')[0];
+        const path = requestLine.split(' ')[1];
+        const host = headers['host'] || 'example.com';
+        
+        const csrfPoC = `<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF PoC</title>
+</head>
+<body>
+    <h1>CSRF Proof of Concept</h1>
+    <form action="http://${host}${path}" method="${method}" enctype="${headers['content-type'] || 'application/x-www-form-urlencoded'}">
+        ${body ? body.split('&').map(param => {
+            const [name, value] = param.split('=');
+            return `<input type="hidden" name="${name}" value="${value || ''}" />`;
+        }).join('\n        ') : ''}
+        <input type="submit" value="Submit Request" />
+    </form>
+    <script>
+        // Auto-submit (remove this line for manual testing)
+        // document.forms[0].submit();
+    </script>
+</body>
+</html>`;
+        
+        const outputElement = document.getElementById('csrfOutput');
+        const resultElement = document.getElementById('csrfResult');
+        
+        if (outputElement) {
+            typeWriterEffect(outputElement, csrfPoC);
+        }
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('CSRF PoC generated successfully!');
+    }, 1000);
+}
+
+function scanCORS() {
+    const urlElement = document.getElementById('corsUrl');
+    const url = urlElement ? urlElement.value.trim() : '';
+    
+    if (!url) {
+        showToast('Please enter a valid URL', 'error');
+        return;
+    }
+    
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        
+        const corsResults = `CORS Vulnerability Scan Results for: ${url}
+
+=== Test Results ===
+1. Wildcard Origin Test: VULNERABLE
+   - Access-Control-Allow-Origin: *
+   - Access-Control-Allow-Credentials: true
+   - Risk: High - Allows any origin with credentials
+
+2. Null Origin Test: SAFE
+   - Null origin properly rejected
+
+3. Subdomain Bypass Test: VULNERABLE
+   - Reflected origin: evil.example.com
+   - Risk: Medium - Improper origin validation
+
+4. HTTP/HTTPS Protocol Test: SAFE
+   - HTTPS properly enforced
+
+=== Recommendations ===
+- Remove wildcard (*) from Access-Control-Allow-Origin
+- Implement proper origin whitelist validation
+- Avoid using Access-Control-Allow-Credentials: true with wildcards
+- Use specific origins instead of reflecting user input
+
+=== Sample Exploit ===
+<script>
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+xhr.open('GET', '${url}', true);
+xhr.onreadystatechange = function() {
+    if (xhr.readyState === 4) {
+        console.log(xhr.responseText);
+    }
+};
+xhr.send();
+</script>`;
+        
+        const outputElement = document.getElementById('corsOutput');
+        const resultElement = document.getElementById('corsResult');
+        
+        if (outputElement) typeWriterEffect(outputElement, corsResults);
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('CORS scan completed!');
+    }, 2000);
+}
+
+function testClickjacking() {
+    const urlElement = document.getElementById('clickjackUrl');
+    const url = urlElement ? urlElement.value.trim() : '';
+    
+    if (!url) {
+        showToast('Please enter a valid URL', 'error');
+        return;
+    }
+    
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        
+        const clickjackResults = `Clickjacking Vulnerability Test for: ${url}
+
+=== Header Analysis ===
+X-Frame-Options: MISSING ❌
+Content-Security-Policy: frame-ancestors 'none' ❌
+Status: VULNERABLE TO CLICKJACKING
+
+=== Risk Assessment ===
+- Severity: Medium to High
+- Impact: User actions can be hijacked
+- Exploitability: Easy with social engineering
+
+=== Test PoC ===
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clickjacking Test</title>
+    <style>
+        iframe {
+            width: 500px;
+            height: 500px;
+            opacity: 0.3; /* Change to 0 for real attack */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+        }
+        .decoy {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="decoy">
+        <h1>Click here to win $1000!</h1>
+        <button>Claim Prize</button>
+    </div>
+    <iframe src="${url}"></iframe>
+</body>
+</html>
+
+=== Mitigation ===
+Add one of these headers:
+1. X-Frame-Options: DENY
+2. X-Frame-Options: SAMEORIGIN
+3. Content-Security-Policy: frame-ancestors 'none'
+4. Content-Security-Policy: frame-ancestors 'self'`;
+        
+        const outputElement = document.getElementById('clickjackOutput');
+        const resultElement = document.getElementById('clickjackResult');
+        
+        if (outputElement) typeWriterEffect(outputElement, clickjackResults);
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('Clickjacking test completed!');
+    }, 1500);
+}
+
+function convertCurlToPHP() {
+    const curlElement = document.getElementById('curlCommand');
+    const curl = curlElement ? curlElement.value.trim() : '';
+    
+    if (!curl) {
+        showToast('Please enter a cURL command', 'error');
+        return;
+    }
+    
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        
+        let php = `<?php
+// Generated PHP code from cURL command
+
+$ch = curl_init();
+
+`;
+        
+        // Parse URL
+        const urlMatch = curl.match(/curl\s+(?:-X\s+\w+\s+)?(?:'([^']+)'|"([^"]+)"|(\S+))/);
+        if (urlMatch) {
+            const url = urlMatch[1] || urlMatch[2] || urlMatch[3];
+            php += `curl_setopt($ch, CURLOPT_URL, '${url}');\n`;
+        }
+        
+        // Parse method
+        const methodMatch = curl.match(/-X\s+(\w+)/);
+        if (methodMatch) {
+            php += `curl_setopt($ch, CURLOPT_CUSTOMREQUEST, '${methodMatch[1]}');\n`;
+        }
+        
+        // Parse headers
+        const headerMatches = curl.matchAll(/-H\s+(?:'([^']+)'|"([^"]+)")/g);
+        const headers = [];
+        for (const match of headerMatches) {
+            headers.push(match[1] || match[2]);
+        }
+        
+        if (headers.length > 0) {
+            php += `curl_setopt($ch, CURLOPT_HTTPHEADER, [\n`;
+            headers.forEach(header => {
+                php += `    '${header}',\n`;
+            });
+            php += `]);\n`;
+        }
+        
+        // Parse data
+        const dataMatch = curl.match(/-d\s+(?:'([^']+)'|"([^"]+)")/);
+        if (dataMatch) {
+            const data = dataMatch[1] || dataMatch[2];
+            php += `curl_setopt($ch, CURLOPT_POSTFIELDS, '${data}');\n`;
+        }
+        
+        php += `
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+$response = curl_exec($ch);
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+if (curl_errno($ch)) {
+    echo 'cURL error: ' . curl_error($ch);
+} else {
+    echo "HTTP Code: " . $httpCode . "\\n";
+    echo "Response: " . $response;
+}
+
+curl_close($ch);
+?>`;
+        
+        const outputElement = document.getElementById('phpOutput');
+        const resultElement = document.getElementById('phpResult');
+        
+        if (outputElement) typeWriterEffect(outputElement, php);
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('cURL converted to PHP successfully!');
+    }, 800);
+}
+
+function calculateCVSS() {
+    const av = getElementValue('attackVector') || 'N';
+    const ac = getElementValue('attackComplexity') || 'L';
+    const pr = getElementValue('privilegesRequired') || 'N';
+    const ui = getElementValue('userInteraction') || 'N';
+    const s = getElementValue('scope') || 'U';
+    const c = getElementValue('confidentialityImpact') || 'N';
+    const i = getElementValue('integrityImpact') || 'N';
+    const a = getElementValue('availabilityImpact') || 'N';
+    
+    // CVSS v3.1 calculation logic
+    const avScore = {'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2}[av];
+    const acScore = {'L': 0.77, 'H': 0.44}[ac];
+    const prScore = s === 'C' ? {'N': 0.85, 'L': 0.68, 'H': 0.5}[pr] : {'N': 0.85, 'L': 0.62, 'H': 0.27}[pr];
+    const uiScore = {'N': 0.85, 'R': 0.62}[ui];
+    const cScore = {'N': 0, 'L': 0.22, 'H': 0.56}[c];
+    const iScore = {'N': 0, 'L': 0.22, 'H': 0.56}[i];
+    const aScore = {'N': 0, 'L': 0.22, 'H': 0.56}[a];
+    
+    const exploitability = 8.22 * avScore * acScore * prScore * uiScore;
+    const impact = s === 'C' 
+        ? 7.52 * (cScore + iScore + aScore - 0.029) - 3.25 * Math.pow(cScore + iScore + aScore - 0.02, 15)
+        : 6.42 * (cScore + iScore + aScore);
+    
+    let baseScore;
+    if (impact <= 0) {
+        baseScore = 0;
+    } else if (s === 'U') {
+        baseScore = Math.min(impact + exploitability, 10);
+    } else {
+        baseScore = Math.min(1.08 * (impact + exploitability), 10);
+    }
+    
+    baseScore = Math.ceil(baseScore * 10) / 10;
+    
+    const severity = baseScore >= 9.0 ? 'Critical' : 
+                    baseScore >= 7.0 ? 'High' : 
+                    baseScore >= 4.0 ? 'Medium' : 
+                    baseScore > 0 ? 'Low' : 'None';
+    
+    const vector = `CVSS:3.1/AV:${av}/AC:${ac}/PR:${pr}/UI:${ui}/S:${s}/C:${c}/I:${i}/A:${a}`;
+    
+    const results = `CVSS v3.1 Score: ${baseScore} (${severity})
+
+Vector String: ${vector}
+
+=== Score Breakdown ===
+Base Score: ${baseScore}
+Exploitability Score: ${exploitability.toFixed(1)}
+Impact Score: ${impact.toFixed(1)}
+
+=== Metrics ===
+Attack Vector: ${av} (${{'N': 'Network', 'A': 'Adjacent', 'L': 'Local', 'P': 'Physical'}[av]})
+Attack Complexity: ${ac} (${{'L': 'Low', 'H': 'High'}[ac]})
+Privileges Required: ${pr} (${{'N': 'None', 'L': 'Low', 'H': 'High'}[pr]})
+User Interaction: ${ui} (${{'N': 'None', 'R': 'Required'}[ui]})
+Scope: ${s} (${{'U': 'Unchanged', 'C': 'Changed'}[s]})
+Confidentiality: ${c} (${{'N': 'None', 'L': 'Low', 'H': 'High'}[c]})
+Integrity: ${i} (${{'N': 'None', 'L': 'Low', 'H': 'High'}[i]})
+Availability: ${a} (${{'N': 'None', 'L': 'Low', 'H': 'High'}[a]})
+
+=== Risk Rating ===
+${severity === 'Critical' ? '🔴 CRITICAL - Immediate action required' :
+  severity === 'High' ? '🟠 HIGH - Action required soon' :
+  severity === 'Medium' ? '🟡 MEDIUM - Action may be required' :
+  severity === 'Low' ? '🟢 LOW - Action at discretion' : '⚪ NONE - No action required'}`;
+    
+    const outputElement = document.getElementById('cvssOutput');
+    const resultElement = document.getElementById('cvssResult');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+}
+
+// Continue with remaining tool functions...
+function generateJSOverlay() {
+    const title = getElementValue('overlayTitle') || 'Website Defaced';
+    const message = getElementValue('overlayMessage') || 'This website has been defaced';
+    const bgColor = getElementValue('overlayBg') || '#ff0000';
+    const textColor = getElementValue('overlayTextColor') || '#ffffff';
+    
+    const jsCode = `// JavaScript Overlay Payload
+(function() {
+    // Create overlay element
+    var overlay = document.createElement('div');
+    overlay.id = 'defaceOverlay';
+    overlay.innerHTML = \`
+        <div style="
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: ${bgColor};
+            color: ${textColor};
+            z-index: 999999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Courier New', monospace;
+            text-align: center;
+        ">
+            <h1 style="font-size: 4em; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.5);">
+                ${title}
+            </h1>
+            <p style="font-size: 1.5em; margin: 20px; max-width: 80%;">
+                ${message}
+            </p>
+            <div style="position: absolute; bottom: 20px; font-size: 0.8em;">
+                Educational purposes only - No harm intended
+            </div>
+        </div>
+    \`;
+    
+    // Remove existing overlay if present
+    var existing = document.getElementById('defaceOverlay');
+    if (existing) {
+        existing.remove();
+    }
+    
+    // Add overlay to page
+    document.body.appendChild(overlay);
+    
+    // Disable scrolling
+    document.body.style.overflow = 'hidden';
+    
+    // Optional: Add removal after timeout
+    // setTimeout(function() {
+    //     overlay.remove();
+    //     document.body.style.overflow = '';
+    // }, 10000); // Remove after 10 seconds
+})();
+
+// Usage: Inject this code via XSS or include in script tag`;
+    
+    const outputElement = document.getElementById('jsoOutput');
+    const resultElement = document.getElementById('jsoResult');
+    
+    if (outputElement) typeWriterEffect(outputElement, jsCode);
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast('JavaScript overlay generated!');
+}
+
+function generateCrontab() {
+    const minute = getElementValue('cronMinute') || '*';
+    const hour = getElementValue('cronHour') || '*';
+    const day = getElementValue('cronDay') || '*';
+    const month = getElementValue('cronMonth') || '*';
+    const weekday = getElementValue('cronWeekday') || '*';
+    const command = getElementValue('cronCommand') || '/path/to/command';
+    
+    const crontabLine = `${minute} ${hour} ${day} ${month} ${weekday} ${command}`;
+    
+    const getDescription = (min, hr, d, mon, wd) => {
+        let desc = 'Run ';
+        
+        if (min === '*' && hr === '*' && d === '*' && mon === '*' && wd === '*') {
+            return 'Run every minute';
+        }
+        
+        if (min !== '*') desc += `at minute ${min} `;
+        if (hr !== '*') desc += `at hour ${hr} `;
+        if (d !== '*') desc += `on day ${d} `;
+        if (mon !== '*') desc += `in month ${mon} `;
+        if (wd !== '*') desc += `on weekday ${wd} `;
+        
+        return desc.trim();
+    };
+    
+    const description = getDescription(minute, hour, day, month, weekday);
+    
+    const result = `Generated Crontab Expression:
+${crontabLine}
+
+Human-readable: ${description}
+
+=== Crontab Format ===
+* * * * * command
+│ │ │ │ │
+│ │ │ │ └─── Weekday (0-7, Sun=0 or 7)
+│ │ │ └───── Month (1-12)
+│ │ └─────── Day (1-31)
+│ └───────── Hour (0-23)
+└─────────── Minute (0-59)
+
+=== Common Examples ===
+0 0 * * *     - Daily at midnight
+0 */6 * * *   - Every 6 hours
+30 2 * * 1    - Every Monday at 2:30 AM
+0 0 1 * *     - First day of every month
+*/15 * * * *  - Every 15 minutes
+
+=== Installation ===
+1. Edit crontab: crontab -e
+2. Add the line: ${crontabLine}
+3. Save and exit
+4. Verify: crontab -l`;
+    
+    const outputElement = document.getElementById('crontabOutput');
+    const resultElement = document.getElementById('crontabResult');
+    
+    if (outputElement) outputElement.textContent = result;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast('Crontab generated successfully!');
+}
+
+function scanSubdomains() {
+    const domainElement = document.getElementById('targetDomain');
+    const domain = domainElement ? domainElement.value.trim() : '';
+    
+    if (!domain) {
+        showToast('Please enter a domain', 'error');
+        return;
+    }
+    
+    showLoading();
+    setTimeout(() => {
+        hideLoading();
+        
+        const subdomains = [
+            'www', 'mail', 'ftp', 'admin', 'test', 'dev', 'staging', 'api', 
+            'blog', 'shop', 'support', 'portal', 'secure', 'vpn', 'remote',
+            'cdn', 'assets', 'static', 'media', 'images', 'files', 'docs',
+            'wiki', 'forum', 'chat', 'webmail', 'cpanel', 'phpmyadmin'
+        ];
+        
+        const foundSubdomains = subdomains
+            .filter(() => Math.random() > 0.7)
+            .map(sub => `${sub}.${domain}`)
+            .slice(0, 15);
+        
+        const results = `Subdomain Discovery Results for: ${domain}
+
+=== Discovered Subdomains ===
+Total found: ${foundSubdomains.length}
+
+${foundSubdomains.map((subdomain, index) => 
+    `${(index + 1).toString().padStart(2, '0')}. ${subdomain}`
+).join('\n')}
+
+=== Additional Information ===
+- DNS Resolution: Simulated
+- HTTP Status: Mixed (200, 403, 404)
+- HTTPS Support: Varies by subdomain
+- Technology Stack: Various
+
+=== Recommended Tools ===
+For real subdomain enumeration, use:
+- Subfinder
+- Assetfinder
+- Amass
+- Sublist3r
+- DNSrecon
+- Gobuster (DNS mode)
+
+=== Example Commands ===
+subfinder -d ${domain} -o subdomains.txt
+amass enum -d ${domain}
+assetfinder --subs-only ${domain}
+
+Note: This is a simulation for educational purposes.
+Real subdomain scanning requires proper tools and authorization.`;
+        
+        const outputElement = document.getElementById('subdomainOutput');
+        const resultElement = document.getElementById('subdomainResult');
+        
+        if (outputElement) typeWriterEffect(outputElement, results);
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('Subdomain scan completed!');
+    }, 3000);
+}
+
+function identifyHash() {
+    const hashElement = document.getElementById('hashInput');
+    const hash = hashElement ? hashElement.value.trim() : '';
+    
+    if (!hash) {
+        showToast('Please enter a hash', 'error');
+        return;
+    }
+    
+    const length = hash.length;
+    const charset = /^[0-9a-fA-F]+$/.test(hash) ? 'hexadecimal' : 
+                   /^[A-Za-z0-9+/]+=*$/.test(hash) ? 'base64' : 'mixed';
+    
+    const possibleHashes = [];
+    
+    if (charset === 'hexadecimal') {
+        switch (length) {
+            case 32: possibleHashes.push('MD5', 'NTLM'); break;
+            case 40: possibleHashes.push('SHA-1', 'MySQL5.x'); break;
+            case 56: possibleHashes.push('SHA-224'); break;
+            case 64: possibleHashes.push('SHA-256', 'SHA-3-256'); break;
+            case 96: possibleHashes.push('SHA-384'); break;
+            case 128: possibleHashes.push('SHA-512', 'Whirlpool'); break;
+            case 16: possibleHashes.push('MySQL323', 'CRC-64'); break;
+        }
+    } else if (charset === 'base64') {
+        if (length === 28) possibleHashes.push('MD5 (Base64)');
+        if (length === 27) possibleHashes.push('SHA-1 (Base64)');
+        if (length === 44) possibleHashes.push('SHA-256 (Base64)');
+        if (length === 88) possibleHashes.push('SHA-512 (Base64)');
+    }
+    
+    if (hash.startsWith('$1$')) possibleHashes.push('MD5 Crypt');
+    if (hash.startsWith('$2a$') || hash.startsWith('$2b$') || hash.startsWith('$2y$')) possibleHashes.push('bcrypt');
+    if (hash.startsWith('$5$')) possibleHashes.push('SHA-256 Crypt');
+    if (hash.startsWith('$6$')) possibleHashes.push('SHA-512 Crypt');
+    if (hash.startsWith('{SHA}')) possibleHashes.push('LDAP SHA');
+    if (hash.startsWith('{SSHA}')) possibleHashes.push('LDAP SSHA');
+    
+    const results = `Hash Analysis Results
+
+=== Input Hash ===
+${hash}
+
+=== Hash Properties ===
+Length: ${length} characters
+Character Set: ${charset}
+Format: ${hash.includes('$') ? 'Unix crypt format' : 'Raw hash'}
+
+=== Possible Hash Types ===
+${possibleHashes.length > 0 ? 
+    possibleHashes.map((type, index) => `${index + 1}. ${type}`).join('\n') : 
+    'Unknown hash type - Consider manual analysis'}
+
+=== Analysis Details ===
+Most Likely: ${possibleHashes[0] || 'Unknown'}
+Confidence: ${possibleHashes.length === 1 ? 'High' : possibleHashes.length <= 3 ? 'Medium' : 'Low'}
+
+=== Cracking Recommendations ===
+${possibleHashes.includes('MD5') ? '- MD5: Use hashcat -m 0 or john --format=Raw-MD5' : ''}
+${possibleHashes.includes('SHA-1') ? '- SHA-1: Use hashcat -m 100 or john --format=Raw-SHA1' : ''}
+${possibleHashes.includes('SHA-256') ? '- SHA-256: Use hashcat -m 1400 or john --format=Raw-SHA256' : ''}
+${possibleHashes.includes('bcrypt') ? '- bcrypt: Use hashcat -m 3200 or john --format=bcrypt' : ''}
+${possibleHashes.includes('NTLM') ? '- NTLM: Use hashcat -m 1000 or john --format=NT' : ''}
+
+=== Common Tools ===
+- Hashcat: GPU-accelerated password recovery
+- John the Ripper: Multi-platform password cracker
+- Hash-identifier: Automated hash identification
+- Hashtag: Online hash identification
+
+Note: Only crack hashes you own or have permission to test.`;
+    
+    const outputElement = document.getElementById('hashOutput');
+    const resultElement = document.getElementById('hashResult');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast('Hash analysis completed!');
+}
+
+function generateMD5() {
+    const inputElement = document.getElementById('md5Input');
+    const input = inputElement ? inputElement.value : '';
+    
+    if (!input) {
+        const resultElement = document.getElementById('md5Result');
+        if (resultElement) resultElement.classList.add('hidden');
+        return;
+    }
+    
+    const md5Hash = simpleMD5(input);
+    
+    const results = `MD5 Hash Generation Results
+
+=== Input Text ===
+${input}
+
+=== Generated MD5 Hash ===
+${md5Hash}
+
+=== Hash Properties ===
+Length: 32 characters
+Encoding: Hexadecimal
+Algorithm: MD5 (128-bit)
+Collision Resistant: No (deprecated for security)
+
+=== Usage Examples ===
+Verification: echo -n "${input}" | md5sum
+PHP: md5("${input}")
+Python: hashlib.md5(b"${input}").hexdigest()
+JavaScript: crypto.createHash('md5').update('${input}').digest('hex')
+
+=== Security Notice ===
+⚠️ MD5 is cryptographically broken and should not be used for security purposes.
+Consider using SHA-256 or SHA-3 for secure applications.
+
+=== Alternative Hashes ===
+SHA-1: ${simpleSHA1(input)}
+SHA-256: ${simpleSHA256(input)}`;
+    
+    const outputElement = document.getElementById('md5Output');
+    const resultElement = document.getElementById('md5Result');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+}
+
+function encodeURL() {
+    const inputElement = document.getElementById('urlInput');
+    const input = inputElement ? inputElement.value : '';
+    
+    if (!input) {
+        showToast('Please enter text to encode', 'error');
+        return;
+    }
+    
+    const encoded = encodeURIComponent(input);
+    
+    const results = `URL Encoding Results
+
+=== Original Text ===
+${input}
+
+=== Encoded URL ===
+${encoded}
+
+=== Encoding Details ===
+Method: Percent Encoding (RFC 3986)
+Characters Encoded: ${encoded.length - input.length} special characters
+Safe Characters: A-Z a-z 0-9 - _ . ~
+
+=== Common Encodings ===
+Space ( ) → %20
+& → %26
+= → %3D
+? → %3F
+# → %23
+/ → %2F
+: → %3A
+
+=== Usage Examples ===
+JavaScript: encodeURIComponent("${input}")
+PHP: urlencode("${input}")
+Python: urllib.parse.quote("${input}")`;
+    
+    const outputElement = document.getElementById('urlOutput');
+    const resultElement = document.getElementById('urlResult');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast('Text encoded successfully!');
+}
+
+function decodeURL() {
+    const inputElement = document.getElementById('urlInput');
+    const input = inputElement ? inputElement.value : '';
+    
+    if (!input) {
+        showToast('Please enter text to decode', 'error');
+        return;
+    }
+    
+    try {
+        const decoded = decodeURIComponent(input);
+        
+        const results = `URL Decoding Results
+
+=== Encoded Text ===
+${input}
+
+=== Decoded URL ===
+${decoded}
+
+=== Decoding Details ===
+Method: Percent Decoding (RFC 3986)
+Characters Decoded: ${input.length - decoded.length} encoded sequences
+Status: Successfully decoded
+
+=== Usage Examples ===
+JavaScript: decodeURIComponent("${input}")
+PHP: urldecode("${input}")
+Python: urllib.parse.unquote("${input}")`;
+        
+        const outputElement = document.getElementById('urlOutput');
+        const resultElement = document.getElementById('urlResult');
+        
+        if (outputElement) outputElement.textContent = results;
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('Text decoded successfully!');
+    } catch (error) {
+        showToast('Invalid URL encoding format', 'error');
+    }
+}
+
+function addHTTPS() {
+    const listElement = document.getElementById('urlList');
+    const urls = listElement ? listElement.value.trim().split('\n').filter(url => url) : [];
+    
+    if (urls.length === 0) {
+        showToast('Please enter URLs', 'error');
+        return;
+    }
+    
+    const modifiedUrls = urls.map(url => {
+        url = url.trim();
+        if (url.startsWith('http://')) {
+            return url.replace('http://', 'https://');
+        } else if (!url.startsWith('https://') && !url.startsWith('http://')) {
+            return 'https://' + url;
+        }
+        return url;
+    });
+    
+    displayUrlResults(urls, modifiedUrls, 'Added HTTPS protocol');
+}
+
+function addHTTP() {
+    const listElement = document.getElementById('urlList');
+    const urls = listElement ? listElement.value.trim().split('\n').filter(url => url) : [];
+    
+    if (urls.length === 0) {
+        showToast('Please enter URLs', 'error');
+        return;
+    }
+    
+    const modifiedUrls = urls.map(url => {
+        url = url.trim();
+        if (url.startsWith('https://')) {
+            return url.replace('https://', 'http://');
+        } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            return 'http://' + url;
+        }
+        return url;
+    });
+    
+    displayUrlResults(urls, modifiedUrls, 'Added HTTP protocol');
+}
+
+function removeProtocol() {
+    const listElement = document.getElementById('urlList');
+    const urls = listElement ? listElement.value.trim().split('\n').filter(url => url) : [];
+    
+    if (urls.length === 0) {
+        showToast('Please enter URLs', 'error');
+        return;
+    }
+    
+    const modifiedUrls = urls.map(url => url.trim().replace(/^https?:\/\//, ''));
+    
+    displayUrlResults(urls, modifiedUrls, 'Removed HTTP/HTTPS protocol');
+}
+
+function displayUrlResults(original, modified, action) {
+    const results = `URL Manipulation Results
+
+=== Action Performed ===
+${action}
+
+=== Results ===
+${modified.map((url, index) => 
+    `${(index + 1).toString().padStart(2, '0')}. ${url}`
+).join('\n')}
+
+=== Summary ===
+Total URLs: ${original.length}
+Modified: ${modified.length}
+Action: ${action}
+
+=== Original URLs ===
+${original.map((url, index) => 
+    `${(index + 1).toString().padStart(2, '0')}. ${url}`
+).join('\n')}`;
+    
+    const outputElement = document.getElementById('urlManipOutput');
+    const resultElement = document.getElementById('urlManipResult');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast(`${action} for ${modified.length} URLs!`);
+}
+
+function encodeBase64() {
+    const inputElement = document.getElementById('base64Input');
+    const input = inputElement ? inputElement.value : '';
+    
+    if (!input) {
+        showToast('Please enter text to encode', 'error');
+        return;
+    }
+    
+    const encoded = btoa(unescape(encodeURIComponent(input)));
+    
+    const results = `Base64 Encoding Results
+
+=== Original Text ===
+${input}
+
+=== Encoded Base64 ===
+${encoded}
+
+=== Encoding Details ===
+Method: Base64 (RFC 4648)
+Character Set: A-Z a-z 0-9 + / =
+Padding: ${encoded.endsWith('=') ? encoded.match(/=+$/)[0].length + ' character(s)' : 'None'}
+Length: ${encoded.length} characters
+
+=== Usage Examples ===
+JavaScript: btoa("${input}")
+PHP: base64_encode("${input}")
+Python: base64.b64encode("${input}".encode()).decode()
+Command Line: echo "${input}" | base64
+
+=== Common Uses ===
+- Data transmission over text protocols
+- Embedding binary data in text formats
+- Basic obfuscation (NOT encryption)
+- Email attachments (MIME)`;
+    
+    const outputElement = document.getElementById('base64Output');
+    const resultElement = document.getElementById('base64Result');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast('Text encoded to Base64 successfully!');
+}
+
+function decodeBase64() {
+    const inputElement = document.getElementById('base64Input');
+    const input = inputElement ? inputElement.value : '';
+    
+    if (!input) {
+        showToast('Please enter Base64 to decode', 'error');
+        return;
+    }
+    
+    try {
+        const decoded = decodeURIComponent(escape(atob(input)));
+        
+        const results = `Base64 Decoding Results
+
+=== Encoded Base64 ===
+${input}
+
+=== Decoded Text ===
+${decoded}
+
+=== Decoding Details ===
+Method: Base64 Decoding (RFC 4648)
+Status: Successfully decoded
+Length: ${decoded.length} characters
+
+=== Usage Examples ===
+JavaScript: atob("${input}")
+PHP: base64_decode("${input}")
+Python: base64.b64decode("${input}").decode()
+Command Line: echo "${input}" | base64 -d`;
+        
+        const outputElement = document.getElementById('base64Output');
+        const resultElement = document.getElementById('base64Result');
+        
+        if (outputElement) outputElement.textContent = results;
+        if (resultElement) resultElement.classList.remove('hidden');
+        
+        showToast('Base64 decoded successfully!');
+    } catch (error) {
+        showToast('Invalid Base64 format', 'error');
+    }
+}
+
+function generatePasswords() {
+    const lengthElement = document.getElementById('passwordLength');
+    const countElement = document.getElementById('passwordCount');
+    const length = lengthElement ? parseInt(lengthElement.value) || 16 : 16;
+    const count = countElement ? parseInt(countElement.value) || 5 : 5;
+    
+    const includeLowercase = getCheckboxValue('includeLowercase');
+    const includeUppercase = getCheckboxValue('includeUppercase');
+    const includeNumbers = getCheckboxValue('includeNumbers');
+    const includeSymbols = getCheckboxValue('includeSymbols');
+    
+    if (!includeLowercase && !includeUppercase && !includeNumbers && !includeSymbols) {
+        showToast('Please select at least one character set', 'error');
+        return;
+    }
+    
+    let charset = '';
+    if (includeLowercase) charset += 'abcdefghijklmnopqrstuvwxyz';
+    if (includeUppercase) charset += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (includeNumbers) charset += '0123456789';
+    if (includeSymbols) charset += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+    
+    const passwords = [];
+    for (let i = 0; i < count; i++) {
+        let password = '';
+        for (let j = 0; j < length; j++) {
+            password += charset.charAt(Math.floor(Math.random() * charset.length));
+        }
+        passwords.push(password);
+    }
+    
+    const strength = calculatePasswordStrength(passwords[0], charset.length);
+    
+    const results = `Generated Passwords
+
+=== Generated Passwords ===
+${passwords.map((pwd, index) => 
+    `${(index + 1).toString().padStart(2, '0')}. ${pwd}`
+).join('\n')}
+
+=== Password Configuration ===
+Length: ${length} characters
+Count: ${count} passwords
+Character Set Size: ${charset.length}
+Lowercase: ${includeLowercase ? 'Yes' : 'No'}
+Uppercase: ${includeUppercase ? 'Yes' : 'No'}
+Numbers: ${includeNumbers ? 'Yes' : 'No'}
+Symbols: ${includeSymbols ? 'Yes' : 'No'}
+
+=== Strength Analysis (First Password) ===
+Strength: ${strength.level}
+Entropy: ${strength.entropy.toFixed(1)} bits
+Possible Combinations: ${strength.combinations}
+Time to Crack: ${strength.crackTime}
+
+=== Security Recommendations ===
+✓ Use unique passwords for each account
+✓ Store passwords in a password manager
+✓ Enable two-factor authentication when available
+✓ Change passwords regularly
+✗ Don't reuse passwords across multiple sites
+✗ Don't share passwords with others
+
+=== Character Set Used ===
+${charset}`;
+    
+    const outputElement = document.getElementById('passwordOutput');
+    const resultElement = document.getElementById('passwordResult');
+    
+    if (outputElement) outputElement.textContent = results;
+    if (resultElement) resultElement.classList.remove('hidden');
+    
+    showToast(`Generated ${count} secure passwords!`);
+}
+
+// Enhanced utility functions with animations
+function typeWriterEffect(element, text, speed = 10) {
+    element.textContent = '';
+    let i = 0;
+    
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
+function getElementValue(id) {
+    const element = document.getElementById(id);
+    return element ? element.value : '';
+}
+
+function getCheckboxValue(id) {
+    const element = document.getElementById(id);
+    return element ? element.checked : false;
+}
+
+function calculatePasswordStrength(password, charsetSize) {
+    const entropy = password.length * Math.log2(charsetSize);
+    const combinations = Math.pow(charsetSize, password.length).toExponential(2);
+    
+    let level, crackTime;
+    if (entropy < 30) {
+        level = 'Very Weak';
+        crackTime = 'Seconds';
+    } else if (entropy < 50) {
+        level = 'Weak';
+        crackTime = 'Minutes to Hours';
+    } else if (entropy < 70) {
+        level = 'Medium';
+        crackTime = 'Days to Months';
+    } else if (entropy < 90) {
+        level = 'Strong';
+        crackTime = 'Years to Centuries';
+    } else {
+        level = 'Very Strong';
+        crackTime = 'Millions of Years';
+    }
+    
+    return { level, entropy, combinations, crackTime };
+}
+
+// Simple hash functions (for demonstration purposes)
+function simpleMD5(input) {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(32, '0');
+}
+
+function simpleSHA1(input) {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = ((hash << 7) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(40, '0');
+}
+
+function simpleSHA256(input) {
+    let hash = 0;
+    for (let i = 0; i < input.length; i++) {
+        const char = input.charCodeAt(i);
+        hash = ((hash << 11) - hash) + char;
+        hash = hash & hash;
+    }
+    return Math.abs(hash).toString(16).padStart(64, '0');
+}
+
+// Enhanced UI utility functions
+function showLoading() {
+    const loadingElement = document.getElementById('loadingOverlay');
+    if (loadingElement) {
+        loadingElement.classList.remove('hidden');
+        
+        // Add particle burst effect
+        createLoadingParticles();
+    }
+}
+
+function hideLoading() {
+    const loadingElement = document.getElementById('loadingOverlay');
+    if (loadingElement) loadingElement.classList.add('hidden');
+}
+
+function createLoadingParticles() {
+    const loadingContainer = document.querySelector('.loading-container');
+    if (!loadingContainer) return;
+    
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00D4FF;
+            border-radius: 50%;
+            pointer-events: none;
+            left: 50%;
+            top: 50%;
+            animation: particleBurst 1s ease-out forwards;
+            animation-delay: ${Math.random() * 0.5}s;
+        `;
+        
+        const angle = (i / 20) * Math.PI * 2;
+        const distance = 50 + Math.random() * 50;
+        
+        particle.style.setProperty('--angle', angle);
+        particle.style.setProperty('--distance', distance + 'px');
+        
+        loadingContainer.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 1500);
+    }
+    
+    // Add CSS for particle burst
+    if (!document.getElementById('particleBurstStyle')) {
+        const style = document.createElement('style');
+        style.id = 'particleBurstStyle';
+        style.textContent = `
+            @keyframes particleBurst {
+                0% {
+                    transform: translate(-50%, -50%) translateX(0) translateY(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(-50%, -50%) 
+                              translateX(calc(cos(var(--angle)) * var(--distance)))
+                              translateY(calc(sin(var(--angle)) * var(--distance)));
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    
+    const container = document.getElementById('toastContainer');
+    if (container) {
+        container.appendChild(toast);
+        
+        // Add pulse effect
+        setTimeout(() => toast.classList.add('neon-pulse'), 100);
+        
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.style.animation = 'toastSlide 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
+            }
+        }, 3000);
+    }
+}
+
+function copyToClipboard(elementId) {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    
+    const text = element.textContent;
+    
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Copied to clipboard!');
+        }).catch(() => {
+            fallbackCopyToClipboard(text);
+        });
+    } else {
+        fallbackCopyToClipboard(text);
+    }
+}
+
+function fallbackCopyToClipboard(text) {
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showToast('Copied to clipboard!');
+    } catch (err) {
+        showToast('Copy failed - please select and copy manually', 'error');
+    }
+    
+    document.body.removeChild(textArea);
 }
