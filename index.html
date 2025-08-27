@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CyberSec Toolkit - Penetration Testing Tools</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="logo">
+                        <span class="logo-text">🛡️ CyberSec Toolkit</span>
+                    </div>
+                    <button class="home-btn" id="homeBtn">
+                        <span>🏠 Home</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home View -->
+            <div id="homeView" class="view active">
+                <div class="container">
+                    <div class="hero-section">
+                        <h1 class="hero-title">Professional Penetration Testing Toolkit</h1>
+                        <p class="hero-subtitle">Advanced cybersecurity tools for ethical hackers and security professionals</p>
+                    </div>
+
+                    <!-- Tools Grid -->
+                    <div class="tools-grid" id="toolsGrid">
+                        <!-- Tools will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tool Views -->
+            <div id="toolView" class="view">
+                <div class="container">
+                    <div class="tool-header">
+                        <button class="back-btn" id="backBtn">← Back to Tools</button>
+                        <h2 id="toolTitle" class="tool-title"></h2>
+                    </div>
+                    <div class="tool-content" id="toolContent">
+                        <!-- Tool content will be dynamically generated -->
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Loading Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p>Processing...</p>
+        </div>
+
+        <!-- Toast Notifications -->
+        <div id="toastContainer" class="toast-container"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
