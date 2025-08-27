@@ -3,32 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberSec Toolkit - Futuristic Penetration Testing</title>
+    <title>CyberSec Toolkit - Penetration Testing Tools</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Particle System Background -->
-    <div class="particle-container" id="particleContainer">
-        <canvas id="particleCanvas"></canvas>
-    </div>
-    
-    <!-- Interactive Grid Background -->
-    <div class="grid-background"></div>
-    
-    <!-- Matrix Rain Effect -->
-    <div class="matrix-rain" id="matrixRain"></div>
-    
     <div class="app-container">
         <!-- Header -->
         <header class="header">
             <div class="container">
                 <div class="header-content">
                     <div class="logo">
-                        <span class="logo-text glitch-text" data-text="🛡️ CyberSec Toolkit">🛡️ CyberSec Toolkit</span>
+                        <span class="logo-text">🛡️ CyberSec Toolkit</span>
                     </div>
-                    <button class="home-btn holographic-btn" id="homeBtn">
-                        <span class="btn-inner">🏠 Home</span>
-                        <div class="btn-glow"></div>
+                    <button class="home-btn" id="homeBtn">
+                        <span>🏠 Home</span>
                     </button>
                 </div>
             </div>
@@ -40,9 +28,8 @@
             <div id="homeView" class="view active">
                 <div class="container">
                     <div class="hero-section">
-                        <h1 class="hero-title typewriter-text">Professional Penetration Testing Toolkit</h1>
-                        <p class="hero-subtitle fade-in-text">Advanced cybersecurity tools for ethical hackers and security professionals</p>
-                        <div class="hero-particles"></div>
+                        <h1 class="hero-title">Professional Penetration Testing Toolkit</h1>
+                        <p class="hero-subtitle">Advanced cybersecurity tools for ethical hackers and security professionals</p>
                     </div>
 
                     <!-- Tools Grid -->
@@ -56,13 +43,10 @@
             <div id="toolView" class="view">
                 <div class="container">
                     <div class="tool-header">
-                        <button class="back-btn holographic-btn" id="backBtn">
-                            <span class="btn-inner">← Back to Tools</span>
-                            <div class="btn-glow"></div>
-                        </button>
-                        <h2 id="toolTitle" class="tool-title glitch-text" data-text=""></h2>
+                        <button class="back-btn" id="backBtn">← Back to Tools</button>
+                        <h2 id="toolTitle" class="tool-title"></h2>
                     </div>
-                    <div class="tool-content holographic-panel" id="toolContent">
+                    <div class="tool-content" id="toolContent">
                         <!-- Tool content will be dynamically generated -->
                     </div>
                 </div>
@@ -71,29 +55,12 @@
 
         <!-- Loading Overlay -->
         <div id="loadingOverlay" class="loading-overlay hidden">
-            <div class="loading-container">
-                <div class="loading-spinner futuristic-spinner"></div>
-                <div class="loading-bars">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </div>
-                <p class="loading-text typewriter-text">Processing...</p>
-                <div class="progress-ring">
-                    <svg>
-                        <circle cx="50" cy="50" r="40" class="progress-circle"></circle>
-                    </svg>
-                </div>
-            </div>
+            <div class="loading-spinner"></div>
+            <p>Processing...</p>
         </div>
 
         <!-- Toast Notifications -->
         <div id="toastContainer" class="toast-container"></div>
-        
-        <!-- Cursor Trail -->
-        <div class="cursor-trail" id="cursorTrail"></div>
     </div>
 
     <script src="app.js"></script>
