@@ -1,4 +1,4 @@
-// Application data - includes all 14 tools
+// Application data - includes all 14 tools with enhanced properties
 const toolsData = {
   "tools": [
     {
@@ -6,98 +6,112 @@ const toolsData = {
       "name": "CSRF Generator V.1",
       "description": "Generate CSRF from BurpSuite Request",
       "category": "Web Security",
-      "icon": "🔐"
+      "icon": "🔐",
+      "color": "#00D4FF"
     },
     {
       "id": "cors-scanner", 
       "name": "CORS Scanner",
       "description": "Discover CORS vulnerabilities with this tools for penetration testing",
       "category": "Web Security",
-      "icon": "🌐"
+      "icon": "🌐",
+      "color": "#B537F7"
     },
     {
       "id": "clickjacking-test",
       "name": "Clickjacking Test", 
       "description": "Check your target against Clickjacking vulnerability",
       "category": "Web Security",
-      "icon": "🖱️"
+      "icon": "🖱️",
+      "color": "#39FF14"
     },
     {
       "id": "curl-to-php",
       "name": "Curl To PHP",
       "description": "This tool turns a Curl command into PHP code", 
       "category": "Code Conversion",
-      "icon": "💻"
+      "icon": "💻",
+      "color": "#FF1493"
     },
     {
       "id": "cvss-calculator",
       "name": "CVSS Calculator",
       "description": "Illustrated graphical Common Vulnerability Scoring System (CVSS)",
       "category": "Risk Assessment", 
-      "icon": "📊"
+      "icon": "📊",
+      "color": "#00FFFF"
     },
     {
       "id": "jso-generator",
       "name": "JSO Generator", 
       "description": "Create Overlay payload for Deface website",
       "category": "Payload Generation",
-      "icon": "🎭"
+      "icon": "🎭",
+      "color": "#FF6B35"
     },
     {
       "id": "crontab-generator",
       "name": "Crontab Online Generator",
       "description": "Generate crontab commands online",
       "category": "System Tools",
-      "icon": "⏰"
+      "icon": "⏰",
+      "color": "#7B68EE"
     },
     {
       "id": "subdomain-scanner",
       "name": "Subdomain Scanner", 
       "description": "Find subdomains for penetration testing",
       "category": "Reconnaissance",
-      "icon": "🔍"
+      "icon": "🔍",
+      "color": "#00FF7F"
     },
     {
       "id": "hash-identifier",
       "name": "Hash Identifier",
       "description": "Identify the hashing algorithm used", 
       "category": "Cryptography",
-      "icon": "#️⃣"
+      "icon": "#️⃣",
+      "color": "#FFD700"
     },
     {
       "id": "md5-generator",
       "name": "MD5 Online Generator",
       "description": "Generate MD5 hashes online",
       "category": "Cryptography", 
-      "icon": "🔒"
+      "icon": "🔒",
+      "color": "#FF4500"
     },
     {
       "id": "url-encoder-decoder", 
       "name": "URL Encode Decode",
       "description": "Encode or decode URLs",
       "category": "Encoding",
-      "icon": "🌍"
+      "icon": "🌍",
+      "color": "#1E90FF"
     },
     {
       "id": "url-manipulator",
       "name": "Add Remove Http Https",
       "description": "Manipulate URLs by adding or removing HTTP/HTTPS",
       "category": "URL Tools",
-      "icon": "🔗"
+      "icon": "🔗",
+      "color": "#DC143C"
     },
     {
       "id": "base64-encoder-decoder",
       "name": "Base64 Decode Encode", 
       "description": "Encode or decode Base64 strings",
       "category": "Encoding",
-      "icon": "🔤"
+      "icon": "🔤",
+      "color": "#9370DB"
     },
     {
       "id": "password-generator",
       "name": "Random Password Generator",
       "description": "Generate random passwords for security",
       "category": "Security",
-      "icon": "🔑"
+      "icon": "🔑",
+      "color": "#FF69B4"
     }
   ]
 };
@@ -105,6 +119,8 @@ const toolsData = {
 // Application state
 let currentTool = null;
 let currentView = 'home';
+let particles = [];
+let animationId = null;
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
@@ -114,7 +130,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function initializeApp() {
     renderToolsGrid();
     setupEventListeners();
-    showHome(); // Ensure we start on home view
+    initializeParticleSystem();
+    initializeMatrixRain();
+    initializeCursorTrail();
+    showHome();
 }
 
 function setupEventListeners() {
@@ -147,6 +166,160 @@ function setupEventListeners() {
     }
 }
 
+// Particle System
+function initializeParticleSystem() {
+    const canvas = document.getElementById('particleCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    
+    // Initialize particles
+    for (let i = 0; i < 100; i++) {
+        particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            vx: (Math.random() - 0.5) * 0.5,
+            vy: (Math.random() - 0.5) * 0.5,
+            size: Math.random() * 2 + 1,
+            opacity: Math.random() * 0.5 + 0.2,
+            color: `hsl(${180 + Math.random() * 60}, 100%, 70%)`
+        });
+    }
+    
+    function animateParticles() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        // Update and draw particles
+        particles.forEach((particle, i) => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            
+            // Wrap around screen
+            if (particle.x < 0) particle.x = canvas.width;
+            if (particle.x > canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = canvas.height;
+            if (particle.y > canvas.height) particle.y = 0;
+            
+            // Draw particle
+            ctx.globalAlpha = particle.opacity;
+            ctx.fillStyle = particle.color;
+            ctx.beginPath();
+            ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw connections
+            particles.forEach((otherParticle, j) => {
+                if (i !== j) {
+                    const dx = particle.x - otherParticle.x;
+                    const dy = particle.y - otherParticle.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.globalAlpha = (100 - distance) / 100 * 0.2;
+                        ctx.strokeStyle = '#00D4FF';
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(particle.x, particle.y);
+                        ctx.lineTo(otherParticle.x, otherParticle.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+        });
+        
+        animationId = requestAnimationFrame(animateParticles);
+    }
+    
+    animateParticles();
+}
+
+// Matrix Rain Effect
+function initializeMatrixRain() {
+    const matrixContainer = document.getElementById('matrixRain');
+    if (!matrixContainer) return;
+    
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const columns = Math.floor(window.innerWidth / 20);
+    const drops = [];
+    
+    for (let i = 0; i < columns; i++) {
+        drops[i] = 1;
+    }
+    
+    function createMatrixRain() {
+        matrixContainer.innerHTML = '';
+        
+        for (let i = 0; i < 20; i++) {
+            const column = document.createElement('div');
+            column.style.cssText = `
+                position: absolute;
+                left: ${Math.random() * 100}%;
+                top: -100px;
+                color: #00FF41;
+                font-family: 'Courier New', monospace;
+                font-size: 14px;
+                animation: matrixFall ${3 + Math.random() * 3}s linear infinite;
+                animation-delay: ${Math.random() * 5}s;
+                opacity: 0.3;
+            `;
+            
+            let text = '';
+            for (let j = 0; j < 10; j++) {
+                text += chars.charAt(Math.floor(Math.random() * chars.length)) + '<br>';
+            }
+            column.innerHTML = text;
+            matrixContainer.appendChild(column);
+        }
+    }
+    
+    // Add CSS animation for matrix fall
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes matrixFall {
+            from { transform: translateY(-100vh); }
+            to { transform: translateY(100vh); }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    createMatrixRain();
+    setInterval(createMatrixRain, 10000);
+}
+
+// Cursor Trail Effect
+function initializeCursorTrail() {
+    const trail = document.getElementById('cursorTrail');
+    if (!trail) return;
+    
+    let mouseX = 0, mouseY = 0;
+    let trailX = 0, trailY = 0;
+    
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+    
+    function animateTrail() {
+        trailX += (mouseX - trailX) * 0.1;
+        trailY += (mouseY - trailY) * 0.1;
+        
+        trail.style.left = trailX - 10 + 'px';
+        trail.style.top = trailY - 10 + 'px';
+        
+        requestAnimationFrame(animateTrail);
+    }
+    
+    animateTrail();
+}
+
 function showHome() {
     currentView = 'home';
     currentTool = null;
@@ -155,16 +328,28 @@ function showHome() {
     const toolView = document.getElementById('toolView');
     
     if (homeView && toolView) {
-        homeView.classList.add('active');
         toolView.classList.remove('active');
+        setTimeout(() => {
+            homeView.classList.add('active');
+        }, 100);
     }
     
-    // Scroll to top
+    // Trigger card entrance animations
+    setTimeout(() => {
+        const cards = document.querySelectorAll('.tool-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = (index * 0.1) + 's';
+            card.style.animation = 'none';
+            card.offsetHeight; // Trigger reflow
+            card.style.animation = 'cardEntrance 0.8s ease-out forwards';
+        });
+    }, 200);
+    
     window.scrollTo(0, 0);
 }
 
 function showTool(toolId) {
-    console.log('showTool called with toolId:', toolId); // Debug log
+    console.log('showTool called with toolId:', toolId);
     
     const tool = toolsData.tools.find(t => t.id === toolId);
     if (!tool) {
@@ -176,43 +361,53 @@ function showTool(toolId) {
     currentTool = tool;
     currentView = 'tool';
     
-    // Update UI elements
-    const toolTitle = document.getElementById('toolTitle');
-    const toolContent = document.getElementById('toolContent');
+    // Show loading with particle effect
+    showLoading();
     
-    if (toolTitle) toolTitle.textContent = tool.name;
-    if (toolContent) toolContent.innerHTML = generateToolContent(tool);
-    
-    // Switch views
-    const homeView = document.getElementById('homeView');
-    const toolView = document.getElementById('toolView');
-    
-    if (homeView && toolView) {
-        homeView.classList.remove('active');
-        toolView.classList.add('active');
-    }
-    
-    // Initialize tool-specific functionality
-    setTimeout(() => initializeTool(toolId), 100);
-    
-    // Scroll to top
-    window.scrollTo(0, 0);
+    setTimeout(() => {
+        // Update UI elements
+        const toolTitle = document.getElementById('toolTitle');
+        const toolContent = document.getElementById('toolContent');
+        
+        if (toolTitle) {
+            toolTitle.textContent = tool.name;
+            toolTitle.setAttribute('data-text', tool.name);
+        }
+        if (toolContent) toolContent.innerHTML = generateToolContent(tool);
+        
+        // Switch views with transition effect
+        const homeView = document.getElementById('homeView');
+        const toolView = document.getElementById('toolView');
+        
+        if (homeView && toolView) {
+            homeView.classList.remove('active');
+            setTimeout(() => {
+                toolView.classList.add('active');
+                hideLoading();
+            }, 300);
+        }
+        
+        // Initialize tool-specific functionality
+        setTimeout(() => initializeTool(toolId), 100);
+        
+        window.scrollTo(0, 0);
+    }, 800);
 }
 
 function renderToolsGrid() {
     const grid = document.getElementById('toolsGrid');
     if (!grid) return;
     
-    grid.innerHTML = toolsData.tools.map(tool => `
-        <div class="tool-card" onclick="showTool('${tool.id}')" data-tool-id="${tool.id}">
-            <span class="tool-category">${tool.category}</span>
-            <span class="tool-icon">${tool.icon}</span>
-            <h3 class="tool-name">${tool.name}</h3>
+    grid.innerHTML = toolsData.tools.map((tool, index) => `
+        <div class="tool-card" onclick="showTool('${tool.id}')" data-tool-id="${tool.id}" style="animation-delay: ${index * 0.1}s">
+            <span class="tool-category" style="border-color: ${tool.color}">${tool.category}</span>
+            <span class="tool-icon" style="filter: drop-shadow(0 0 10px ${tool.color})">${tool.icon}</span>
+            <h3 class="tool-name" style="color: ${tool.color}; text-shadow: 0 0 10px ${tool.color}">${tool.name}</h3>
             <p class="tool-description">${tool.description}</p>
         </div>
     `).join('');
     
-    console.log('Tools grid rendered with', toolsData.tools.length, 'tools'); // Debug log
+    console.log('Tools grid rendered with', toolsData.tools.length, 'tools');
 }
 
 function generateToolContent(tool) {
@@ -584,12 +779,11 @@ https://example.com"></textarea>
 }
 
 function initializeTool(toolId) {
-    console.log('Initializing tool:', toolId); // Debug log
+    console.log('Initializing tool:', toolId);
     
     // Add real-time input handlers where appropriate
     switch(toolId) {
         case 'cvss-calculator':
-            // Add change listeners for real-time calculation
             const selects = ['attackVector', 'attackComplexity', 'privilegesRequired', 'userInteraction', 'scope', 'confidentialityImpact', 'integrityImpact', 'availabilityImpact'];
             selects.forEach(id => {
                 const element = document.getElementById(id);
@@ -597,7 +791,7 @@ function initializeTool(toolId) {
                     element.addEventListener('change', calculateCVSS);
                 }
             });
-            calculateCVSS(); // Initial calculation
+            calculateCVSS();
             break;
             
         case 'md5-generator':
@@ -616,7 +810,7 @@ function initializeTool(toolId) {
     }
 }
 
-// Tool functions
+// Tool functions with enhanced visual feedback
 function generateCSRF() {
     const requestElement = document.getElementById('httpRequest');
     const request = requestElement ? requestElement.value.trim() : '';
@@ -677,7 +871,9 @@ function generateCSRF() {
         const outputElement = document.getElementById('csrfOutput');
         const resultElement = document.getElementById('csrfResult');
         
-        if (outputElement) outputElement.textContent = csrfPoC;
+        if (outputElement) {
+            typeWriterEffect(outputElement, csrfPoC);
+        }
         if (resultElement) resultElement.classList.remove('hidden');
         
         showToast('CSRF PoC generated successfully!');
@@ -737,7 +933,7 @@ xhr.send();
         const outputElement = document.getElementById('corsOutput');
         const resultElement = document.getElementById('corsResult');
         
-        if (outputElement) outputElement.textContent = corsResults;
+        if (outputElement) typeWriterEffect(outputElement, corsResults);
         if (resultElement) resultElement.classList.remove('hidden');
         
         showToast('CORS scan completed!');
@@ -811,7 +1007,7 @@ Add one of these headers:
         const outputElement = document.getElementById('clickjackOutput');
         const resultElement = document.getElementById('clickjackResult');
         
-        if (outputElement) outputElement.textContent = clickjackResults;
+        if (outputElement) typeWriterEffect(outputElement, clickjackResults);
         if (resultElement) resultElement.classList.remove('hidden');
         
         showToast('Clickjacking test completed!');
@@ -894,7 +1090,7 @@ curl_close($ch);
         const outputElement = document.getElementById('phpOutput');
         const resultElement = document.getElementById('phpResult');
         
-        if (outputElement) outputElement.textContent = php;
+        if (outputElement) typeWriterEffect(outputElement, php);
         if (resultElement) resultElement.classList.remove('hidden');
         
         showToast('cURL converted to PHP successfully!');
@@ -911,7 +1107,7 @@ function calculateCVSS() {
     const i = getElementValue('integrityImpact') || 'N';
     const a = getElementValue('availabilityImpact') || 'N';
     
-    // CVSS v3.1 calculation logic (simplified)
+    // CVSS v3.1 calculation logic
     const avScore = {'N': 0.85, 'A': 0.62, 'L': 0.55, 'P': 0.2}[av];
     const acScore = {'L': 0.77, 'H': 0.44}[ac];
     const prScore = s === 'C' ? {'N': 0.85, 'L': 0.68, 'H': 0.5}[pr] : {'N': 0.85, 'L': 0.62, 'H': 0.27}[pr];
@@ -975,6 +1171,7 @@ ${severity === 'Critical' ? '🔴 CRITICAL - Immediate action required' :
     if (resultElement) resultElement.classList.remove('hidden');
 }
 
+// Continue with remaining tool functions...
 function generateJSOverlay() {
     const title = getElementValue('overlayTitle') || 'Website Defaced';
     const message = getElementValue('overlayMessage') || 'This website has been defaced';
@@ -1039,7 +1236,7 @@ function generateJSOverlay() {
     const outputElement = document.getElementById('jsoOutput');
     const resultElement = document.getElementById('jsoResult');
     
-    if (outputElement) outputElement.textContent = jsCode;
+    if (outputElement) typeWriterEffect(outputElement, jsCode);
     if (resultElement) resultElement.classList.remove('hidden');
     
     showToast('JavaScript overlay generated!');
@@ -1055,7 +1252,6 @@ function generateCrontab() {
     
     const crontabLine = `${minute} ${hour} ${day} ${month} ${weekday} ${command}`;
     
-    // Generate human-readable description
     const getDescription = (min, hr, d, mon, wd) => {
         let desc = 'Run ';
         
@@ -1123,7 +1319,6 @@ function scanSubdomains() {
     setTimeout(() => {
         hideLoading();
         
-        // Simulate subdomain discovery results
         const subdomains = [
             'www', 'mail', 'ftp', 'admin', 'test', 'dev', 'staging', 'api', 
             'blog', 'shop', 'support', 'portal', 'secure', 'vpn', 'remote',
@@ -1132,9 +1327,9 @@ function scanSubdomains() {
         ];
         
         const foundSubdomains = subdomains
-            .filter(() => Math.random() > 0.7) // Random selection
+            .filter(() => Math.random() > 0.7)
             .map(sub => `${sub}.${domain}`)
-            .slice(0, 15); // Limit results
+            .slice(0, 15);
         
         const results = `Subdomain Discovery Results for: ${domain}
 
@@ -1171,7 +1366,7 @@ Real subdomain scanning requires proper tools and authorization.`;
         const outputElement = document.getElementById('subdomainOutput');
         const resultElement = document.getElementById('subdomainResult');
         
-        if (outputElement) outputElement.textContent = results;
+        if (outputElement) typeWriterEffect(outputElement, results);
         if (resultElement) resultElement.classList.remove('hidden');
         
         showToast('Subdomain scan completed!');
@@ -1193,30 +1388,15 @@ function identifyHash() {
     
     const possibleHashes = [];
     
-    // Hash identification based on length and charset
     if (charset === 'hexadecimal') {
         switch (length) {
-            case 32:
-                possibleHashes.push('MD5', 'NTLM');
-                break;
-            case 40:
-                possibleHashes.push('SHA-1', 'MySQL5.x');
-                break;
-            case 56:
-                possibleHashes.push('SHA-224');
-                break;
-            case 64:
-                possibleHashes.push('SHA-256', 'SHA-3-256');
-                break;
-            case 96:
-                possibleHashes.push('SHA-384');
-                break;
-            case 128:
-                possibleHashes.push('SHA-512', 'Whirlpool');
-                break;
-            case 16:
-                possibleHashes.push('MySQL323', 'CRC-64');
-                break;
+            case 32: possibleHashes.push('MD5', 'NTLM'); break;
+            case 40: possibleHashes.push('SHA-1', 'MySQL5.x'); break;
+            case 56: possibleHashes.push('SHA-224'); break;
+            case 64: possibleHashes.push('SHA-256', 'SHA-3-256'); break;
+            case 96: possibleHashes.push('SHA-384'); break;
+            case 128: possibleHashes.push('SHA-512', 'Whirlpool'); break;
+            case 16: possibleHashes.push('MySQL323', 'CRC-64'); break;
         }
     } else if (charset === 'base64') {
         if (length === 28) possibleHashes.push('MD5 (Base64)');
@@ -1225,7 +1405,6 @@ function identifyHash() {
         if (length === 88) possibleHashes.push('SHA-512 (Base64)');
     }
     
-    // Special patterns
     if (hash.startsWith('$1$')) possibleHashes.push('MD5 Crypt');
     if (hash.startsWith('$2a$') || hash.startsWith('$2b$') || hash.startsWith('$2y$')) possibleHashes.push('bcrypt');
     if (hash.startsWith('$5$')) possibleHashes.push('SHA-256 Crypt');
@@ -1286,7 +1465,6 @@ function generateMD5() {
         return;
     }
     
-    // Simple MD5 implementation (for demonstration - not cryptographically secure)
     const md5Hash = simpleMD5(input);
     
     const results = `MD5 Hash Generation Results
@@ -1621,7 +1799,6 @@ function generatePasswords() {
         passwords.push(password);
     }
     
-    // Calculate password strength
     const strength = calculatePasswordStrength(passwords[0], charset.length);
     
     const results = `Generated Passwords
@@ -1666,7 +1843,22 @@ ${charset}`;
     showToast(`Generated ${count} secure passwords!`);
 }
 
-// Utility functions
+// Enhanced utility functions with animations
+function typeWriterEffect(element, text, speed = 10) {
+    element.textContent = '';
+    let i = 0;
+    
+    function type() {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    }
+    
+    type();
+}
+
 function getElementValue(id) {
     const element = document.getElementById(id);
     return element ? element.value : '';
@@ -1704,7 +1896,6 @@ function calculatePasswordStrength(password, charsetSize) {
 
 // Simple hash functions (for demonstration purposes)
 function simpleMD5(input) {
-    // This is a simplified demonstration - use proper crypto libraries in production
     let hash = 0;
     for (let i = 0; i < input.length; i++) {
         const char = input.charCodeAt(i);
@@ -1734,15 +1925,72 @@ function simpleSHA256(input) {
     return Math.abs(hash).toString(16).padStart(64, '0');
 }
 
-// UI utility functions
+// Enhanced UI utility functions
 function showLoading() {
     const loadingElement = document.getElementById('loadingOverlay');
-    if (loadingElement) loadingElement.classList.remove('hidden');
+    if (loadingElement) {
+        loadingElement.classList.remove('hidden');
+        
+        // Add particle burst effect
+        createLoadingParticles();
+    }
 }
 
 function hideLoading() {
     const loadingElement = document.getElementById('loadingOverlay');
     if (loadingElement) loadingElement.classList.add('hidden');
+}
+
+function createLoadingParticles() {
+    const loadingContainer = document.querySelector('.loading-container');
+    if (!loadingContainer) return;
+    
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #00D4FF;
+            border-radius: 50%;
+            pointer-events: none;
+            left: 50%;
+            top: 50%;
+            animation: particleBurst 1s ease-out forwards;
+            animation-delay: ${Math.random() * 0.5}s;
+        `;
+        
+        const angle = (i / 20) * Math.PI * 2;
+        const distance = 50 + Math.random() * 50;
+        
+        particle.style.setProperty('--angle', angle);
+        particle.style.setProperty('--distance', distance + 'px');
+        
+        loadingContainer.appendChild(particle);
+        
+        setTimeout(() => particle.remove(), 1500);
+    }
+    
+    // Add CSS for particle burst
+    if (!document.getElementById('particleBurstStyle')) {
+        const style = document.createElement('style');
+        style.id = 'particleBurstStyle';
+        style.textContent = `
+            @keyframes particleBurst {
+                0% {
+                    transform: translate(-50%, -50%) translateX(0) translateY(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translate(-50%, -50%) 
+                              translateX(calc(cos(var(--angle)) * var(--distance)))
+                              translateY(calc(sin(var(--angle)) * var(--distance)));
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
 }
 
 function showToast(message, type = 'success') {
@@ -1754,9 +2002,13 @@ function showToast(message, type = 'success') {
     if (container) {
         container.appendChild(toast);
         
+        // Add pulse effect
+        setTimeout(() => toast.classList.add('neon-pulse'), 100);
+        
         setTimeout(() => {
             if (toast.parentNode) {
-                toast.remove();
+                toast.style.animation = 'toastSlide 0.3s ease-out reverse';
+                setTimeout(() => toast.remove(), 300);
             }
         }, 3000);
     }
@@ -1780,7 +2032,6 @@ function copyToClipboard(elementId) {
 }
 
 function fallbackCopyToClipboard(text) {
-    // Fallback for older browsers
     const textArea = document.createElement('textarea');
     textArea.value = text;
     textArea.style.position = 'fixed';
